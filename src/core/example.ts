@@ -241,7 +241,7 @@ const drafts: Draft[] = [
     status: 'accepted',
     time: '18:48',
     title: 'Make the trace map the main view',
-    body: 'Each live decision gets one row: evidence that supports it on the left, evidence that challenges it on the right, and the decisions it replaced inside its card. The graph and the timeline stay one key away (G and T).',
+    body: 'Each current decision gets one row: evidence that supports it on the left, evidence that challenges it on the right, and the decisions it replaced inside its card. The graph and the timeline stay one key away (G and T).',
     tags: ['ui'],
   },
   {

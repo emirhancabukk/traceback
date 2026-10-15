@@ -116,7 +116,7 @@ const TYPE_LABELS: Record<EntryType, { one: string; many: string }> = {
 export const STATUS_LABELS: Record<DecisionStatus, string> = {
   proposed: 'Proposed',
   accepted: 'Accepted',
-  superseded: 'Superseded',
+  superseded: 'Replaced',
   rejected: 'Rejected',
 };
 

@@ -2,7 +2,7 @@ import { buildGraph, layoutGraph, type GraphModel } from '../core/graph';
 import { boundsOf, type Bounds, type Point } from '../core/layout';
 import { STATUS_LABELS, typeLabel, type Entry } from '../core/model';
 import { entryMatches, hasFilters, parseQuery, type WorkspaceIndex } from '../core/query';
-import { escapeHtml, plural, truncate } from './format';
+import { REPLACED_HINT, escapeHtml, plural, truncate } from './format';
 import { icon } from './icons';
 import { inspectorHtml } from './inspector';
 
@@ -71,8 +71,8 @@ export function renderGraph(index: WorkspaceIndex, state: GraphViewState): Rende
     <div><p class="eyebrow">WORKSPACE / PERSONAL</p><h1 id="view-title">Graph</h1><p class="sub">How decisions and their evidence connect. Rings are decisions; dots are evidence.</p></div>
     <div class="summary">
       <div class="stat"><b>${model.nodes.length}</b><small>entries</small></div>
-      <div class="stat"><b class="is-accent">${links}</b><small>connections</small></div>
-      <div class="stat"><b>${replacements}</b><small>replacements</small></div>
+      <div class="stat" title="Evidence connected to decisions, for or against"><b class="is-accent">${links}</b><small>connections</small></div>
+      <div class="stat" title="${REPLACED_HINT}"><b>${replacements}</b><small>replaced decisions</small></div>
     </div>
   </header>`;
 
@@ -132,8 +132,8 @@ export function renderGraph(index: WorkspaceIndex, state: GraphViewState): Rende
           <defs><marker id="tb-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
           <g class="graph-viewport"><g class="g-edges">${edges}</g><g class="g-nodes">${nodes}</g><g class="g-labels">${labels}</g></g>
         </svg>
-        <div class="graph-legend" aria-hidden="true"><span><i class="lg-support"></i>supports</span><span><i class="lg-challenge"></i>challenges</span><span><i class="lg-replace"></i>replaced by</span><span class="lg-hint">drag to move · scroll to zoom</span></div>
-        <div class="graph-zoom"><button type="button" data-action="zoom-in" aria-label="Zoom in">${icon('plus', 15)}</button><button type="button" data-action="zoom-out" aria-label="Zoom out"><span aria-hidden="true">−</span></button><button type="button" data-action="zoom-fit" aria-label="Fit the graph to the window">FIT</button></div>
+        <div class="graph-legend" aria-hidden="true"><span><svg class="lg-glyph" width="14" height="14" viewBox="0 0 14 14"><circle class="lg-ring" cx="7" cy="7" r="5"/></svg>decision</span><span><svg class="lg-glyph" width="14" height="14" viewBox="0 0 14 14"><circle class="lg-dot" cx="7" cy="7" r="4"/></svg>evidence</span><span><i class="lg-support"></i>supports</span><span><i class="lg-challenge"></i>challenges</span><span><i class="lg-replace"></i>replaced by</span><span class="lg-hint">drag to move · scroll to zoom</span></div>
+        <div class="graph-zoom"><button type="button" data-action="zoom-in" aria-label="Zoom in" title="Zoom in (+)">${icon('plus', 15)}</button><button type="button" data-action="zoom-out" aria-label="Zoom out" title="Zoom out (−)"><span aria-hidden="true">−</span></button><button type="button" data-action="zoom-fit" aria-label="Fit the graph to the window" title="Fit the graph to the window (0)">FIT</button></div>
       </div>
       ${inspector}
     </div>

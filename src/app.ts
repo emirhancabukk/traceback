@@ -293,15 +293,15 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
     const nav = VIEW_ORDER.map((view) => {
       const on = state.view === view;
       const { label, key, hash } = VIEWS[view];
-      return `<a href="${hash}" class="nav-item${on ? ' on' : ''}" data-action="view" data-view="${view}" data-focus="nav:${view}"${on ? ' aria-current="page"' : ''}>${icon(VIEWS[view].icon, 16)}<span>${label}</span><kbd aria-hidden="true">${key.toUpperCase()}</kbd></a>`;
+      return `<a href="${hash}" class="nav-item${on ? ' on' : ''}" data-action="view" data-view="${view}" data-focus="nav:${view}" title="${label} (keyboard shortcut: ${key.toUpperCase()})"${on ? ' aria-current="page"' : ''}>${icon(VIEWS[view].icon, 16)}<span>${label}</span><kbd aria-hidden="true">${key.toUpperCase()}</kbd></a>`;
     }).join('');
     return `<aside class="sidebar">
       <div class="brand"><span class="brand-mark">${icon('bolt', 17)}</span><span>traceback</span></div>
       <div class="side-search">
-        <label class="search-box">${icon('search', 15)}<span class="visually-hidden">Search entries</span><input id="search" type="search" data-focus="search" value="${escapeHtml(state.search)}" placeholder="Search…" autocomplete="off" spellcheck="false" /><kbd aria-hidden="true">/</kbd></label>
+        <label class="search-box" title="Search (keyboard shortcut: /)">${icon('search', 15)}<span class="visually-hidden">Search entries</span><input id="search" type="search" data-focus="search" value="${escapeHtml(state.search)}" placeholder="Search…" autocomplete="off" spellcheck="false" /><kbd aria-hidden="true">/</kbd></label>
         <p class="search-hint">Try <code>#tag</code>, <code>type:note</code> or <code>is:unsupported</code></p>
       </div>
-      <button type="button" class="primary side-capture" data-action="new-entry" data-focus="capture">${icon('plus', 15)}<span>Capture entry</span><kbd aria-hidden="true">N</kbd></button>
+      <button type="button" class="primary side-capture" data-action="new-entry" data-focus="capture" title="Capture a source, note, command, file change or decision (keyboard shortcut: N)">${icon('plus', 15)}<span>Capture entry</span><kbd aria-hidden="true">N</kbd></button>
       <nav class="side-nav" aria-label="Views">${nav}</nav>
       <div class="side-foot">
         <div class="backup-actions"><button type="button" class="link-button" data-action="export-backup" data-focus="export-backup"${empty ? ' disabled' : ''}>Export backup</button><label class="link-button">Import backup<input type="file" data-change="import" accept="application/json,.json" hidden /></label></div>

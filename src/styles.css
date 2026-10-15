@@ -68,6 +68,7 @@ code { font: 11px var(--mono); color: var(--text-soft); }
 .primary:hover { background: var(--accent-strong); }
 .secondary { padding: 10px 14px; border: 1px solid #2c414d; background: #1a2732; color: #b1c0ca; font-size: 13px; }
 .secondary:hover { border-color: var(--accent); color: var(--text); }
+.secondary.is-small { padding: 6px 12px; border-radius: 20px; font-size: 12px; }
 .ghost { padding: 7px 10px; border: 1px solid transparent; background: transparent; color: var(--muted); font-size: 12px; font-weight: 600; }
 .ghost:hover { border-color: var(--line-strong); color: var(--text); background: var(--bg-raised); }
 .ghost.is-danger:hover { border-color: var(--rose-line); color: var(--rose); background: var(--rose-bg); }
@@ -146,9 +147,13 @@ code { font: 11px var(--mono); color: var(--text-soft); }
 
 /* ── Trace map ───────────────────────────────────────────────────────── */
 .trace-columns, .trace-row { display: grid; grid-template-columns: minmax(0, 1fr) 70px minmax(300px, 380px) 70px minmax(0, 1fr); }
-.trace-columns { margin-bottom: 10px; color: var(--dim); font: 10px var(--mono); letter-spacing: .14em; }
-.trace-columns span:first-child { text-align: right; }
+.trace-columns { position: sticky; top: 0; z-index: 3; margin: 0 0 4px; padding: 10px 0 8px; background: linear-gradient(var(--bg) 78%, transparent); color: var(--dim); font: 10px var(--mono); letter-spacing: .14em; }
 .trace-columns span:nth-child(3) { text-align: center; }
+.trace-columns .col-supports, .trace-columns .col-challenges { display: flex; align-items: center; gap: 8px; }
+.trace-columns .col-supports { justify-content: flex-end; color: #5fbfa6; }
+.trace-columns .col-supports::after { content: ''; width: 18px; border-top: 2px solid var(--accent); }
+.trace-columns .col-challenges { color: #d99a9f; }
+.trace-columns .col-challenges::before { content: ''; width: 18px; border-top: 2px dashed var(--rose); }
 .trace-rows { margin: 0; padding: 0; list-style: none; }
 .trace-row { align-items: start; margin-bottom: 26px; }
 .trace-row.is-closed { opacity: .62; }
@@ -293,6 +298,9 @@ svg.graph.is-hovering .g-edge.is-near { opacity: .95; }
 .graph-legend .lg-challenge { border-top: 2px dashed var(--rose); }
 .graph-legend .lg-replace { border-top: 2px dotted var(--grey-line); }
 .graph-legend .lg-hint { color: var(--faint); }
+.graph-legend .lg-glyph { flex: none; }
+.graph-legend .lg-ring { fill: none; stroke: var(--c-decision); stroke-width: 2.2; }
+.graph-legend .lg-dot { fill: var(--c-note); }
 .graph-zoom { position: absolute; right: 14px; bottom: 14px; display: grid; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 9px; background: var(--bg-overlay); }
 .graph-zoom button { display: grid; place-items: center; width: 36px; height: 32px; border: 0; border-bottom: 1px solid var(--line-strong); background: none; color: var(--muted); font-size: 16px; }
 .graph-zoom button:last-child { border: 0; font: 10px var(--mono); }
@@ -371,12 +379,12 @@ dialog::backdrop { background: #05080bbd; }
   .trace-row { grid-template-columns: minmax(0, 1fr); gap: 8px; margin-bottom: 30px; }
   .trace-row .flow { display: none; }
   .trace-card { order: -1; min-height: 0 !important; }
-  .trace-stack, .trace-stack.is-supports { justify-items: start; padding-left: 14px; border-left: 2px solid var(--accent-line); }
-  .trace-stack.is-challenges { border-left-color: var(--rose-line); }
+  .trace-stack, .trace-stack.is-supports { justify-items: start; padding-left: 14px; border-left: 2px solid #2f7a6b; }
+  .trace-stack.is-challenges { border-left: 2px dashed #8a4a50; }
   .trace-stack.is-challenges:empty { display: none; }
-  .trace-stack::before { color: var(--dim); font: 10px var(--mono); letter-spacing: .14em; }
-  .trace-stack.is-supports::before { content: 'SUPPORTS'; }
-  .trace-stack.is-challenges::before { content: 'CHALLENGES'; }
+  .trace-stack::before { font: 10px var(--mono); letter-spacing: .14em; }
+  .trace-stack.is-supports::before { content: 'SUPPORTS'; color: #5fbfa6; }
+  .trace-stack.is-challenges::before { content: 'CHALLENGES'; color: #d99a9f; }
   .chip-ev { max-width: 100%; }
   .content-grid, .graph-layout { grid-template-columns: minmax(0, 1fr); }
   .content-grid .inspector { position: static; max-height: none; padding: 24px 0 0; border-left: 0; border-top: 1px solid var(--line-strong); order: -1; }

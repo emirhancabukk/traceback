@@ -59,12 +59,12 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
     </dialog>
     <dialog id="link-dialog" aria-labelledby="link-dialog-title">
       <form id="link-form" class="dialog-form" novalidate>
-        <div class="dialog-head"><div><p class="eyebrow">CONNECT EVIDENCE</p><h2 id="link-dialog-title" data-role="heading">What bears on this decision?</h2><p class="dialog-help" data-role="help"></p></div>${closeButton}</div>
+        <div class="dialog-head"><div><p class="eyebrow">CONNECT EVIDENCE</p><h2 id="link-dialog-title" data-role="heading">Connect evidence to this decision</h2><p class="dialog-help" data-role="help"></p></div>${closeButton}</div>
         <div class="relation-picker" role="radiogroup" aria-label="Relation"><label><input type="radio" name="kind" value="supports" checked /> Supports</label><label><input type="radio" name="kind" value="challenges" /> Challenges</label></div>
         <label class="filter-field"><span class="visually-hidden">Filter the list</span><input type="search" data-role="filter" placeholder="Filter…" autocomplete="off" /></label>
         <div class="candidate-list" data-role="candidates"></div>
         <p class="form-error" role="alert" data-role="error"></p>
-        <button class="primary full" type="submit">Connect selected</button>
+        <button class="primary full" type="submit">Connect</button>
       </form>
     </dialog>
     <dialog id="supersede-dialog" aria-labelledby="supersede-dialog-title">
@@ -184,7 +184,7 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
     try {
       deps.store.updateEntry(supersedeId, { supersededBy: String(replacement) });
       supersedeDialog.close();
-      deps.onChanged('Marked as replaced. It stays in the log, linked to its successor.');
+      deps.onChanged('Marked as replaced. It stays in your trail, linked to the decision that replaced it.');
     } catch (error) {
       showError(supersedeForm, error);
     }
@@ -239,10 +239,10 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
       if (!candidates.length) return false;
       linkAnchor = anchorId;
       linkForm.reset();
-      part(linkForm, 'heading').textContent = isDecision ? 'What bears on this decision?' : 'Which decisions does this bear on?';
+      part(linkForm, 'heading').textContent = isDecision ? 'Connect evidence to this decision' : 'Connect this to decisions';
       part(linkForm, 'help').textContent = isDecision
-        ? `Pick the evidence behind “${anchor.title}”, then say whether it supports the decision or challenges it.`
-        : `Pick the decisions “${anchor.title}” matters for, then say whether it supports or challenges them.`;
+        ? `Pick the evidence behind “${anchor.title}”, then choose whether it supports the decision or challenges it.`
+        : `Pick the decisions “${anchor.title}” matters for, then choose whether it supports or challenges them.`;
       part(linkForm, 'candidates').innerHTML = candidates.map((entry) => candidateHtml(entry, 'checkbox', 'pick')).join('');
       open(linkDialog, linkForm);
       part<HTMLInputElement>(linkForm, 'filter').focus();
@@ -257,7 +257,7 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
       if (!candidates.length) return false;
       supersedeId = decisionId;
       supersedeForm.reset();
-      part(supersedeForm, 'help').textContent = `“${decision.title}” will be marked as replaced. It stays in the log, linked to its successor.`;
+      part(supersedeForm, 'help').textContent = `“${decision.title}” will be marked as replaced. It is not deleted: it stays in your trail, linked to the decision that replaced it.`;
       part(supersedeForm, 'candidates').innerHTML = candidates.map((entry) => candidateHtml(entry, 'radio', 'replacement')).join('');
       const current = decision.supersededBy
         ? supersedeForm.querySelector<HTMLInputElement>(`input[value="${decision.supersededBy}"]`)

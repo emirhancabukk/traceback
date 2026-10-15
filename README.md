@@ -10,8 +10,8 @@ Everything stays in your browser. There is no account, no server and no telemetr
 
 ## Three ways to look at the trail
 
-- **Trace map** (<kbd>M</kbd>, the default): one row per live decision. Evidence that supports it sits on the left, evidence that challenges it on the right, and the decisions it replaced appear inside its card with the reasons they were dropped. Evidence that is not connected to anything yet is listed at the bottom, so nothing gets lost.
-- **Graph** (<kbd>G</kbd>): every entry and connection on one canvas. Rings are decisions, dots are evidence; teal lines support, dashed red lines challenge, dotted arrows point from a replaced decision to its successor. Select a node to bring its neighbourhood forward. Positions come from each entry's id rather than chance, so the same trail looks the same every time you open it, and adding an entry barely moves the rest.
+- **Trace map** (<kbd>M</kbd>, the default): one row per current decision. Evidence that supports it sits on the left, evidence that challenges it on the right, and the decisions it replaced appear inside its card with the reasons they were dropped. Evidence that is not connected to anything yet is listed at the bottom, so nothing gets lost.
+- **Graph** (<kbd>G</kbd>): every entry and connection on one canvas. Rings are decisions, dots are evidence; teal lines support, dashed red lines challenge, dotted arrows point from a replaced decision to the one that replaced it. Select a node to bring its neighbourhood forward. Positions come from each entry's id rather than chance, so the same trail looks the same every time you open it, and adding an entry barely moves the rest.
 - **Timeline** (<kbd>T</kbd>): everything you captured, newest first, filterable by type.
 
 ![The graph view with a decision selected](docs/screenshots/graph.png)
@@ -23,7 +23,7 @@ Everything stays in your browser. There is no account, no server and no telemetr
 - **Evidence for and against**: every link says whether the evidence supports or challenges the decision, and you can flip it later.
 - **Edit in place**: change, reconnect or delete any entry from its details panel; a deleted entry comes back with **Undo**.
 - **Search with operators**: `type:decision`, `#tag`, `status:proposed`, `is:unsupported`, `is:unlinked`, `is:challenged`, `"exact phrase"`. In the trace map a search also finds decisions through their evidence.
-- **Coverage at a glance**: live decisions, supporting links, open challenges, and evidence by type.
+- **Coverage at a glance**: current decisions, reasons for and against, and evidence by type. Replaced decisions are never deleted; they stay in the trail, linked to the decision that replaced them.
 - **Exports**: one decision as a Markdown or JSON bundle (UTC timestamps, quotes, links); the whole workspace as a JSON backup you can import again.
 - **Browser extension** for Chrome, Brave and Firefox: capture the current page and selected text with one click or <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd>.
 - **Safe across tabs**: open Traceback in as many tabs as you like; no tab overwrites another's work.

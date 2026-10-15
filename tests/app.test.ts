@@ -94,6 +94,16 @@ describe('trace map', () => {
     $('[data-action="toggle-closed"]').click();
     expect($$('.trace-row')).toHaveLength(live + 2);
     expect($$('.trace-row.is-closed')).toHaveLength(2);
+    expect($$('.trace-row.is-closed .trace-meta .pill').map((pill) => pill.textContent)).toEqual(['Replaced', 'Replaced']);
+  });
+
+  it('records a decision straight from the trace map toolbar', () => {
+    loadExample();
+    expect($('[data-filter="unsupported"]').textContent).toContain('No support yet');
+    $('[data-focus="map-new-decision"]').click();
+    expect($('#entry-dialog').hasAttribute('open')).toBe(true);
+    expect($('#entry-form').dataset.type).toBe('decision');
+    expect($('#entry-dialog-title').textContent).toBe('Record a decision');
   });
 
   it('opens an entry in the drawer and closes it with Escape', () => {
@@ -261,7 +271,7 @@ describe('dialogs', () => {
     remount();
     $(`.trace-loose .chip-ev[data-id="${note.id}"]`).click();
     $('.drawer [data-action="link"]').click();
-    expect($('#link-form').textContent).toContain('Which decisions does this bear on?');
+    expect($('#link-form').textContent).toContain('Connect this to decisions');
     $<HTMLInputElement>(`#link-form [name="pick"][value="${decision.id}"]`).checked = true;
     $<HTMLInputElement>('#link-form [value="challenges"]').checked = true;
     $<HTMLFormElement>('#link-form').requestSubmit();

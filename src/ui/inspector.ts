@@ -1,6 +1,6 @@
 import { DECISION_STATUSES, STATUS_LABELS, typeLabel, type Entry, type LinkKind } from '../core/model';
 import { decisionsFor, evidenceFor, type Connected, type WorkspaceIndex } from '../core/query';
-import { escapeHtml, formatDateTime, plural } from './format';
+import { REPLACED_HINT, escapeHtml, formatDateTime, plural } from './format';
 import { icon, typeIcon } from './icons';
 
 export interface InspectorOptions {
@@ -73,8 +73,8 @@ function decisionHtml(index: WorkspaceIndex, decision: Entry, options: Inspector
   return `${head('DECISION', decision, options)}
     <div class="inspector-meta"><span class="pill status-${status}">${STATUS_LABELS[status]}</span><time datetime="${decision.createdAt}">${formatDateTime(decision.createdAt)}</time>${ORIGIN_NOTES[decision.origin] ? `<span>${ORIGIN_NOTES[decision.origin]}</span>` : ''}</div>
     <label class="field-inline">Status <select data-change="status" data-id="${decision.id}" data-focus="inspector-status">${statuses.map((option) => `<option value="${option}" ${option === status ? 'selected' : ''}>${STATUS_LABELS[option]}</option>`).join('')}</select></label>
-    ${replacement ? `<p class="relation-line">Replaced by ${entryButton(replacement)}</p>` : ''}
-    ${replaces.map((old) => `<p class="relation-line">Replaces ${entryButton(old, true)}</p>`).join('')}
+    ${replacement ? `<p class="relation-line" title="${REPLACED_HINT}">Replaced by ${entryButton(replacement)}</p>` : ''}
+    ${replaces.map((old) => `<p class="relation-line" title="${REPLACED_HINT}">Replaces ${entryButton(old, true)}</p>`).join('')}
     <div class="inspector-body">${decision.body ? escapeHtml(decision.body) : '<span class="muted">No rationale recorded yet. Edit the decision to say why.</span>'}</div>
     ${extras(decision)}
     <p class="eyebrow">EVIDENCE BALANCE</p>

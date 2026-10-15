@@ -1,5 +1,8 @@
 import { clampText } from '../core/model';
 
+/** Shown wherever a replaced decision appears, so replacing never reads as deleting. */
+export const REPLACED_HINT = 'Replaced decisions are never deleted. They stay in your trail, linked to the decision that replaced them.';
+
 const ESCAPES: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
 
 /** Every piece of user text goes through this before it reaches innerHTML. */

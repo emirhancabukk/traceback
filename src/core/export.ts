@@ -74,7 +74,7 @@ export function bundleToMarkdown(bundle: DecisionBundle, exportedAt: Date = new 
   if (decision.updatedAt !== decision.createdAt) meta.push(`**Updated:** ${formatUtc(decision.updatedAt)}`);
   const lines = [`# ${escapeMarkdown(decision.title)}`, '', meta.join(' · '), ''];
   if (bundle.supersededBy) {
-    lines.push(`> **Superseded by:** ${escapeMarkdown(bundle.supersededBy.title)} (${formatUtc(bundle.supersededBy.createdAt)})`, '');
+    lines.push(`> **Replaced by:** ${escapeMarkdown(bundle.supersededBy.title)} (${formatUtc(bundle.supersededBy.createdAt)})`, '');
   }
   if (decision.url) lines.push(`<${decision.url}>`, '');
   const tags = tagLine(decision);

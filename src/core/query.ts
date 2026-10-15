@@ -144,6 +144,7 @@ export function entryMatches(index: WorkspaceIndex, entry: Entry, query: ParsedQ
     entry.url ?? '',
     typeLabel(entry.type),
     entry.status ? STATUS_LABELS[entry.status] : '',
+    entry.status ?? '',
     ...entry.tags,
   ]
     .join('\n')
