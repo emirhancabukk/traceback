@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Traceback — Capture evidence",
+  "version": "0.1.0",
+  "description": "Save the active page and selected text to your local Traceback timeline.",
+  "action": {
+    "default_title": "Capture to Traceback",
+    "default_popup": "popup.html"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "permissions": ["activeTab", "scripting", "storage"],
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "capture@traceback.local",
+      "strict_min_version": "109.0"
+    }
+  }
+}

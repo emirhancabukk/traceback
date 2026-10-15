@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Capture to Traceback</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <div class="brand"><span>↯</span><strong>traceback</strong><small>capture evidence</small></div>
+      <section id="preview" class="preview"><div class="loading">Reading active tab…</div></section>
+      <label class="field">Traceback app URL<input id="app-url" type="url" placeholder="http://localhost:5173" /></label>
+      <button id="capture" class="capture" disabled>Capture source</button>
+      <p id="status" class="status" role="status"></p>
+      <a href="#" id="settings">Configure app URL</a>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
