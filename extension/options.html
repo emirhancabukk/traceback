@@ -1,5 +1,37 @@
 <!doctype html>
 <html lang="en">
-  <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>Traceback extension settings</title><link rel="stylesheet" href="options.css" /></head>
-  <body><main><div class="brand"><span>↯</span><strong>traceback</strong></div><p>Connect this extension to your local Traceback app.</p><label>App URL<input id="app-url" type="url" placeholder="http://localhost:5173" /></label><button id="save">Save settings</button><output id="status"></output></main><script src="options.js"></script></body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Traceback extension settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <header class="brand"><span aria-hidden="true">↯</span><strong>traceback</strong></header>
+      <p>Captures go to the Traceback app running on this computer. Nothing is sent anywhere else.</p>
+
+      <form id="settings-form">
+        <label for="app-url">App address</label>
+        <div class="row"><input id="app-url" type="url" inputmode="url" placeholder="http://localhost:5173" required /><button type="submit">Save</button></div>
+        <p class="hint">Must be on localhost or 127.0.0.1. The default is http://localhost:5173.</p>
+      </form>
+
+      <section aria-labelledby="access-title">
+        <h2 id="access-title">Access to localhost</h2>
+        <p id="access-status" class="hint">Checking…</p>
+        <button id="grant" type="button" hidden>Allow access</button>
+      </section>
+
+      <section aria-labelledby="queue-title">
+        <h2 id="queue-title">Waiting captures</h2>
+        <p id="queue-status" class="hint">Checking…</p>
+        <button id="discard" type="button" class="danger" hidden>Discard waiting captures</button>
+      </section>
+
+      <output id="status" role="status"></output>
+    </main>
+    <script src="shared.js"></script>
+    <script src="options.js"></script>
+  </body>
 </html>

@@ -8,13 +8,18 @@
   </head>
   <body>
     <main>
-      <div class="brand"><span>↯</span><strong>traceback</strong><small>capture evidence</small></div>
-      <section id="preview" class="preview"><div class="loading">Reading active tab…</div></section>
-      <label class="field">Traceback app URL<input id="app-url" type="url" placeholder="http://localhost:5173" /></label>
-      <button id="capture" class="capture" disabled>Capture source</button>
+      <header class="brand"><span aria-hidden="true">↯</span><strong>traceback</strong><small>capture evidence</small></header>
+      <form id="capture-form" novalidate>
+        <section id="preview" class="preview" aria-live="polite"><div class="loading">Reading the active tab…</div></section>
+        <label class="field">Title<input id="title" maxlength="300" autocomplete="off" /></label>
+        <label class="field">Why it matters <span class="hint">optional</span><textarea id="note" rows="3" maxlength="5000" placeholder="What does this tell you?"></textarea></label>
+        <label class="field">Tags <span class="hint">comma separated</span><input id="tags" autocomplete="off" placeholder="pricing, research" /></label>
+        <button id="capture" class="capture" type="submit" disabled>Capture source <kbd>Ctrl</kbd> <kbd>Enter</kbd></button>
+      </form>
       <p id="status" class="status" role="status"></p>
-      <a href="#" id="settings">Configure app URL</a>
+      <footer><span id="queue"></span><a href="#" id="settings">Settings</a></footer>
     </main>
+    <script src="shared.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

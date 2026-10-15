@@ -1,5 +1,27 @@
 :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #101820; color: #e6edf3; }
-body { width: 320px; margin: 0; background: radial-gradient(circle at 100% 0, #203343, #101820 55%); }
-main { padding: 20px; }.brand { display: flex; align-items: center; gap: 8px; }.brand span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; color: #071016; background: #6ee7c6; font-weight: 800; }.brand strong { font-size: 16px; }.brand small { margin-left: auto; color: #728392; font-size: 10px; }
-.preview { min-height: 116px; margin: 23px 0 16px; padding: 15px; border: 1px solid #2c404c; border-radius: 10px; background: #121e28; }.preview h1 { margin: 0 0 9px; font-size: 15px; line-height: 1.35; }.preview p { margin: 0; color: #8fa0ab; font-size: 12px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }.url { display: block; margin-top: 12px; color: #6ee7c6; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.loading { color: #788b99; font-size: 12px; padding: 35px 0; text-align: center; }
-.field { display: block; color: #8fa0ab; font-size: 11px; }.field input { display: block; width: 100%; margin-top: 6px; padding: 9px; box-sizing: border-box; border: 1px solid #2c404c; border-radius: 6px; color: #e6edf3; background: #0b131a; outline: none; font-size: 12px; }.field input:focus { border-color: #6ee7c6; }.capture { width: 100%; margin-top: 14px; padding: 11px; border: 0; border-radius: 7px; color: #071016; background: #6ee7c6; font-weight: 700; cursor: pointer; }.capture:disabled { cursor: not-allowed; opacity: .45; }.status { min-height: 16px; color: #6ee7c6; font-size: 11px; text-align: center; }.status.error { color: #f1a6a6; }a { display: block; color: #718594; font-size: 11px; text-align: center; text-decoration: none; }a:hover { color: #6ee7c6; }
+body { width: 340px; margin: 0; background: radial-gradient(circle at 100% 0, #203343, #101820 55%); }
+main { padding: 18px 20px 16px; }
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; color: #071016; background: #6ee7c6; font-weight: 800; }
+.brand strong { font-size: 16px; }
+.brand small { margin-left: auto; color: #728392; font-size: 10px; }
+.preview { min-height: 96px; margin: 18px 0 14px; padding: 13px 14px; border: 1px solid #2c404c; border-radius: 10px; background: #121e28; }
+.preview h1 { margin: 0 0 8px; font-size: 14px; line-height: 1.35; }
+.preview p { margin: 0; color: #b4c4cf; font-size: 12px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line; }
+.preview p.muted { color: #788b99; }
+.url { display: block; margin-top: 10px; color: #6ee7c6; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.loading { color: #788b99; font-size: 12px; padding: 30px 0; text-align: center; }
+.field { display: block; margin-top: 10px; color: #8fa0ab; font-size: 11px; }
+.hint { color: #5f707d; }
+.field input, .field textarea { display: block; width: 100%; margin-top: 5px; padding: 8px 9px; box-sizing: border-box; border: 1px solid #2c404c; border-radius: 6px; color: #e6edf3; background: #0b131a; outline: none; font: 12px/1.45 system-ui, sans-serif; resize: vertical; }
+.field input:focus, .field textarea:focus { border-color: #6ee7c6; }
+.capture { width: 100%; margin-top: 14px; padding: 11px; border: 0; border-radius: 7px; color: #071016; background: #6ee7c6; font-weight: 700; cursor: pointer; }
+.capture:hover { background: #96f2dc; }
+.capture:disabled { cursor: not-allowed; opacity: .45; }
+.capture:focus-visible { outline: 2px solid #e6edf3; outline-offset: 2px; }
+kbd { padding: 1px 4px; border-radius: 3px; background: #0b131a33; font: 600 9px system-ui, sans-serif; }
+.status { min-height: 16px; margin: 10px 0 4px; color: #6ee7c6; font-size: 11px; text-align: center; line-height: 1.4; }
+.status.error { color: #f1a6a6; }
+footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #5f707d; font-size: 10px; }
+a { color: #718594; font-size: 11px; text-decoration: none; }
+a:hover, a:focus-visible { color: #6ee7c6; }

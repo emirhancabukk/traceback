@@ -1,26 +1,49 @@
 {
   "manifest_version": 3,
   "name": "Traceback — Capture evidence",
-  "version": "0.1.0",
-  "description": "Save the active page and selected text to your local Traceback timeline.",
+  "short_name": "Traceback",
+  "version": "0.2.0",
+  "description": "Save the current page and the text you selected to your local Traceback trail. Nothing leaves your computer.",
   "action": {
     "default_title": "Capture to Traceback",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
   },
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
   "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["*://localhost/*", "*://127.0.0.1/*"],
+  "content_scripts": [
+    {
+      "matches": ["*://localhost/*", "*://127.0.0.1/*"],
+      "js": ["shared.js", "bridge.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Alt+Shift+K" },
+      "description": "Capture the current page"
+    }
+  },
   "icons": {
-    "16": "icon.svg",
-    "48": "icon.svg",
-    "128": "icon.svg"
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
   },
   "browser_specific_settings": {
     "gecko": {
       "id": "capture@traceback.local",
-      "strict_min_version": "109.0"
+      "strict_min_version": "115.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   }
 }

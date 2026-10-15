@@ -1,15 +1,24 @@
 {
   "name": "traceback",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "Local-first evidence trail: connect the sources, notes, commands and file changes behind every decision.",
+  "license": "MIT",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:extension": "node scripts/validate-extension.mjs",
+    "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "preview": "vite preview"
+    "typecheck": "tsc",
+    "icons": "node scripts/build-icons.mjs",
+    "check:icons": "node scripts/build-icons.mjs --check",
+    "check:extension": "node scripts/validate-extension.mjs",
+    "check": "npm run typecheck && npm test && npm run check:icons && npm run check:extension && vite build"
   },
   "devDependencies": {
     "jsdom": "^25.0.1",
