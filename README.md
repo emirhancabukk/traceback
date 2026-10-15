@@ -6,19 +6,40 @@ Traceback is a local-first evidence trail. You capture the sources, notes, comma
 
 Everything stays in your browser. There is no account, no server and no telemetry; the app's Content-Security-Policy does not even allow it to make outside requests.
 
+![The trace map: each decision with the evidence for it on the left and against it on the right](docs/screenshots/trace-map.png)
+
+## Three ways to look at the trail
+
+- **Trace map** (<kbd>M</kbd>, the default): one row per live decision. Evidence that supports it sits on the left, evidence that challenges it on the right, and the decisions it replaced appear inside its card with the reasons they were dropped. Evidence that is not connected to anything yet is listed at the bottom, so nothing gets lost.
+- **Graph** (<kbd>G</kbd>): every entry and connection on one canvas. Rings are decisions, dots are evidence; teal lines support, dashed red lines challenge, dotted arrows point from a replaced decision to its successor. Select a node to bring its neighbourhood forward. Positions come from each entry's id rather than chance, so the same trail looks the same every time you open it, and adding an entry barely moves the rest.
+- **Timeline** (<kbd>T</kbd>): everything you captured, newest first, filterable by type.
+
+![The graph view with a decision selected](docs/screenshots/graph.png)
+
 ## Features
 
 - **Five entry types**: source, note, decision, command, file change, with tags, links and verbatim quotes.
-- **Decisions with a lifecycle**: proposed, accepted, rejected, superseded — including which decision replaced which.
-- **Evidence for and against**: every link says whether the evidence supports or challenges the decision.
-- **Search with operators**: `type:decision`, `#tag`, `status:proposed`, `is:unsupported`, `is:unlinked`, `is:challenged`, `"exact phrase"`.
-- **Coverage at a glance**: how much evidence is connected, and which live decisions have no support yet.
+- **Decisions with a lifecycle**: proposed, accepted, rejected, replaced — including which decision replaced which.
+- **Evidence for and against**: every link says whether the evidence supports or challenges the decision, and you can flip it later.
+- **Edit in place**: change, reconnect or delete any entry from its details panel; a deleted entry comes back with **Undo**.
+- **Search with operators**: `type:decision`, `#tag`, `status:proposed`, `is:unsupported`, `is:unlinked`, `is:challenged`, `"exact phrase"`. In the trace map a search also finds decisions through their evidence.
+- **Coverage at a glance**: live decisions, supporting links, open challenges, and evidence by type.
 - **Exports**: one decision as a Markdown or JSON bundle (UTC timestamps, quotes, links); the whole workspace as a JSON backup you can import again.
 - **Browser extension** for Chrome, Brave and Firefox: capture the current page and selected text with one click or <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd>.
 - **Safe across tabs**: open Traceback in as many tabs as you like; no tab overwrites another's work.
-- **Example workspace**: the real decision log of the Traceback 0.2 rewrite, added only when you ask and removed in one click.
+- **Example workspace**: the real decision log behind Traceback itself, added only when you ask and removed in one click.
 
-A graph view of decisions and evidence is in progress.
+### Keyboard
+
+| Key | Action |
+| --- | --- |
+| <kbd>M</kbd> / <kbd>G</kbd> / <kbd>T</kbd> | Trace map / Graph / Timeline |
+| <kbd>N</kbd> | Capture a new entry |
+| <kbd>/</kbd> | Search |
+| <kbd>Esc</kbd> | Close the details panel |
+| <kbd>+</kbd> / <kbd>-</kbd> / <kbd>0</kbd> | Zoom in, zoom out, fit the graph |
+
+Each view has its own address (`#map`, `#graph`, `#timeline`), so the browser's back button and bookmarks work.
 
 ## Quick start
 
@@ -70,27 +91,31 @@ npm run icons          # regenerate extension icons and favicon after editing sc
 
 ```
 src/
-  core/        UI-independent logic, fully unit-tested
-    model.ts     types, limits, normalisers
-    schema.ts    validation, repair and 0.1 migration
-    store.ts     persistence, cross-tab safety, import, undo
-    query.ts     search operators, statistics
-    export.ts    Markdown/JSON bundles and backups
-    bridge.ts    the page side of the extension hand-over
-    example.ts   the example workspace
-  app.ts       the user interface
-  main.ts      entry point
-extension/     Manifest V3 extension (no build step)
-scripts/       icon rasteriser and extension checks
-tests/         Vitest suites
+  core/          UI-independent logic, fully unit-tested
+    model.ts       types, limits, normalisers
+    schema.ts      validation, repair and 0.1 migration
+    store.ts       persistence, cross-tab safety, import, undo
+    query.ts       search operators, statistics
+    decisions.ts   live decisions, replacement chains
+    tracemap.ts    the trace map's rows, filters and summary
+    graph.ts       graph nodes and edges
+    layout.ts      deterministic force layout
+    export.ts      Markdown/JSON bundles and backups
+    bridge.ts      the page side of the extension hand-over
+    example.ts     the example workspace
+  ui/            views, inspector, dialogs, icons
+  app.ts         state, routing, shortcuts and events
+  main.ts        entry point
+extension/       Manifest V3 extension (no build step)
+scripts/         icon rasteriser and extension checks
+tests/           Vitest suites
 ```
 
 Traceback has no runtime dependencies. The core is plain TypeScript with no DOM access, so a future desktop build can swap `localStorage` for SQLite without touching the rest.
 
 ## Roadmap
 
-- Graph view of decisions, evidence and supersession
-- Editing and deleting entries from the UI (supported by the store already)
+- Replay how a trail formed with a time slider (proposed; it is in the example workspace)
 - Capture from the browser's context menu
 - Desktop build with SQLite storage
 

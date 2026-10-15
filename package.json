@@ -1,6 +1,6 @@
 {
   "name": "traceback",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Local-first evidence trail: connect the sources, notes, commands and file changes behind every decision.",
   "license": "MIT",
   "private": true,

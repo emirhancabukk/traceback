@@ -125,11 +125,12 @@ export function hasFilters(query: ParsedQuery): boolean {
 export function searchEntries(index: WorkspaceIndex, text: string, type: EntryType | 'all' = 'all'): Entry[] {
   const query = parseQuery(text);
   return index.workspace.entries
-    .filter((entry) => (type === 'all' || entry.type === type) && matches(index, entry, query))
+    .filter((entry) => (type === 'all' || entry.type === type) && entryMatches(index, entry, query))
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt) || a.title.localeCompare(b.title));
 }
 
-function matches(index: WorkspaceIndex, entry: Entry, query: ParsedQuery): boolean {
+/** True when `entry` satisfies every word, phrase and operator in `query`. */
+export function entryMatches(index: WorkspaceIndex, entry: Entry, query: ParsedQuery): boolean {
   if (query.types.size && !query.types.has(entry.type)) return false;
   if (query.statuses.size && !(entry.status && query.statuses.has(entry.status))) return false;
   const tags = entry.tags.map((tag) => tag.toLocaleLowerCase());

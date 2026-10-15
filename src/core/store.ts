@@ -1,3 +1,4 @@
+import { createsReplacementLoop } from './decisions';
 import { EXAMPLE_WORKSPACE } from './example';
 import {
   LIMITS,
@@ -202,6 +203,10 @@ export class TimelineStore {
           const replacement = draft.entries.find((candidate) => candidate.id === patch.supersededBy);
           if (!replacement || replacement.type !== 'decision' || replacement.id === id) {
             throw new ValidationError('Choose another decision as the replacement.');
+          }
+          const lookup = (candidateId: string) => draft.entries.find((candidate) => candidate.id === candidateId);
+          if (createsReplacementLoop(lookup, id, replacement.id)) {
+            throw new ValidationError('That decision was itself replaced by this one. Choose a different replacement.');
           }
           entry.supersededBy = replacement.id;
           entry.status = 'superseded';

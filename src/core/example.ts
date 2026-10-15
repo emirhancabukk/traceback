@@ -1,8 +1,8 @@
 import { SCHEMA_VERSION, type Entry, type EntryType, type Link, type LinkKind, type Workspace } from './model';
 
 /**
- * The example workspace is the actual decision log of the Traceback 0.2
- * rewrite (15 October 2026): every command output, quote and URL below is
+ * The example workspace is the actual decision log behind Traceback 0.2 and
+ * 0.3 (15 October 2026): every command output, quote and URL below is
  * real. It is only added when the user asks for it, and every entry carries
  * `origin: "example"` so it can be removed again in one step.
  */
@@ -87,7 +87,7 @@ const drafts: Draft[] = [
   {
     id: 'example-d-graph',
     type: 'decision',
-    status: 'proposed',
+    status: 'accepted',
     time: '16:34',
     title: 'Add a graph view of decisions and evidence',
     body: 'Show at a glance which evidence holds a decision up, what pushes against it, and which decisions replaced which.',
@@ -235,6 +235,80 @@ const drafts: Draft[] = [
     body: 'Seeing how sources, notes, commands and file changes hang off each decision should not require reading the whole timeline.',
     tags: ['ui'],
   },
+  {
+    id: 'example-d-tracemap',
+    type: 'decision',
+    status: 'accepted',
+    time: '18:48',
+    title: 'Make the trace map the main view',
+    body: 'Each live decision gets one row: evidence that supports it on the left, evidence that challenges it on the right, and the decisions it replaced inside its card. The graph and the timeline stay one key away (G and T).',
+    tags: ['ui'],
+  },
+  {
+    id: 'example-d-replay',
+    type: 'decision',
+    status: 'proposed',
+    time: '17:12',
+    title: 'Replay how the trail formed with a time slider',
+    body: 'Drag a slider, or press play, to watch entries and links appear in the order they were recorded.',
+    tags: ['ui'],
+  },
+  {
+    id: 'example-n-mockups',
+    type: 'note',
+    time: '17:09',
+    title: 'Compared three layouts on the example data',
+    body: 'A: the workspace with a graph tab. B: a full-screen canvas with a replay slider. C: a trace map with one row per decision.',
+    tags: ['ui'],
+  },
+  {
+    id: 'example-n-canvas',
+    type: 'note',
+    time: '17:12',
+    title: 'A full-screen canvas is harder to use every day',
+    body: 'Option B looked the most striking, but capturing and reading entries day to day happens in lists, not on a canvas.',
+    tags: ['ui'],
+  },
+  {
+    id: 'example-n-replay',
+    type: 'note',
+    time: '17:09',
+    title: 'The replay slider in option B ran on the example data',
+    body: 'Dragging it to 16:40 showed the 13 entries recorded by then.',
+    tags: ['ui'],
+  },
+  {
+    id: 'example-n-choice',
+    type: 'note',
+    time: '18:48',
+    title: 'The trace map was picked without the slider',
+    body: 'Of the four choices offered, the plain trace map was picked. The slider stays open for later.',
+    tags: ['ui'],
+  },
+  {
+    id: 'example-n-narrow',
+    type: 'note',
+    time: '19:10',
+    title: 'The trace map needs a wide window',
+    body: 'Below 1180 px the three columns no longer fit, so each row stacks: the decision first, then its evidence.',
+    tags: ['ui', 'limitation'],
+  },
+  {
+    id: 'example-f-tracemap',
+    type: 'file-change',
+    time: '19:02',
+    title: 'src/ui/tracemap-view.ts: one row per decision',
+    body: 'Supporting evidence on the left, challenging evidence on the right, connectors drawn from the chip positions, and replaced decisions inside the card.',
+    tags: ['ui'],
+  },
+  {
+    id: 'example-f-layout',
+    type: 'file-change',
+    time: '19:00',
+    title: 'src/core/layout.ts: deterministic force layout',
+    body: 'Every node starts at a position derived from its id, so the same trail is always drawn the same way.',
+    tags: ['ui'],
+  },
 ];
 
 const relations: Array<[decisionId: string, evidenceId: string, kind: LinkKind]> = [
@@ -259,6 +333,13 @@ const relations: Array<[decisionId: string, evidenceId: string, kind: LinkKind]>
   ['example-d-port', 'example-n-origin', 'supports'],
   ['example-d-port', 'example-f-port', 'supports'],
   ['example-d-graph', 'example-n-graph', 'supports'],
+  ['example-d-graph', 'example-f-layout', 'supports'],
+  ['example-d-tracemap', 'example-n-mockups', 'supports'],
+  ['example-d-tracemap', 'example-n-canvas', 'supports'],
+  ['example-d-tracemap', 'example-f-tracemap', 'supports'],
+  ['example-d-tracemap', 'example-n-narrow', 'challenges'],
+  ['example-d-replay', 'example-n-replay', 'supports'],
+  ['example-d-replay', 'example-n-choice', 'challenges'],
 ];
 
 const entries: Entry[] = drafts.map(({ time, body = '', tags = [], ...rest }) => ({

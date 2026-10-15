@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Traceback — Capture evidence",
   "short_name": "Traceback",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Save the current page and the text you selected to your local Traceback trail. Nothing leaves your computer.",
   "action": {
     "default_title": "Capture to Traceback",

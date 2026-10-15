@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { replacementCandidates } from '../src/core/decisions';
 import { LEGACY_STORAGE_KEY, STORAGE_KEY, StorageFullError, TimelineStore } from '../src/core/store';
 import { ValidationError } from '../src/core/model';
 import { workspaceToJson } from '../src/core/export';
@@ -70,6 +71,18 @@ describe('TimelineStore entries', () => {
     expect(store.updateEntry(old.id, { supersededBy: replacement.id })).toMatchObject({ status: 'superseded', supersededBy: replacement.id });
     expect(() => store.updateEntry(old.id, { supersededBy: old.id })).toThrow(ValidationError);
     expect(store.updateEntry(old.id, { status: 'accepted' }).supersededBy).toBeUndefined();
+  });
+
+  it('refuses replacement loops and leaves them out of the candidates', () => {
+    const { store } = makeStore();
+    const a = store.createEntry({ type: 'decision', title: 'A' });
+    const b = store.createEntry({ type: 'decision', title: 'B' });
+    const c = store.createEntry({ type: 'decision', title: 'C' });
+    store.updateEntry(a.id, { supersededBy: b.id });
+    store.updateEntry(b.id, { supersededBy: c.id });
+    expect(() => store.updateEntry(c.id, { supersededBy: a.id })).toThrow(/replaced by this one/);
+    expect(replacementCandidates(store.index(), c.id)).toEqual([]);
+    expect(replacementCandidates(store.index(), a.id).map((entry) => entry.id)).toEqual([c.id, b.id]);
   });
 
   it('deletes an entry with its links and restores both', () => {
