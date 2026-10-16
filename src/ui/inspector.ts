@@ -72,7 +72,7 @@ function decisionHtml(index: WorkspaceIndex, decision: Entry, options: Inspector
 
   return `${head('DECISION', decision, options)}
     <div class="inspector-meta"><span class="pill status-${status}">${STATUS_LABELS[status]}</span><time datetime="${decision.createdAt}">${formatDateTime(decision.createdAt)}</time>${ORIGIN_NOTES[decision.origin] ? `<span>${ORIGIN_NOTES[decision.origin]}</span>` : ''}</div>
-    <label class="field-inline">Status <select data-change="status" data-id="${decision.id}" data-focus="inspector-status">${statuses.map((option) => `<option value="${option}" ${option === status ? 'selected' : ''}>${STATUS_LABELS[option]}</option>`).join('')}</select></label>
+    <div class="field-inline"><span>Status</span><div class="segmented" role="group" aria-label="Status">${statuses.map((option) => `<button type="button" class="seg-option status-${option}${option === status ? ' on' : ''}" data-action="set-status" data-id="${decision.id}" data-status="${option}" data-focus="status:${option}" aria-pressed="${option === status}">${STATUS_LABELS[option]}</button>`).join('')}</div></div>
     ${replacement ? `<p class="relation-line" title="${REPLACED_HINT}">Replaced by ${entryButton(replacement)}</p>` : ''}
     ${replaces.map((old) => `<p class="relation-line" title="${REPLACED_HINT}">Replaces ${entryButton(old, true)}</p>`).join('')}
     <div class="inspector-body">${decision.body ? escapeHtml(decision.body) : '<span class="muted">No rationale recorded yet. Edit the decision to say why.</span>'}</div>

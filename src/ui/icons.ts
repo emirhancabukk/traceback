@@ -27,6 +27,8 @@ const PATHS = {
   download: '<path d="M8 2.5v8"/><path d="M5 7.5l3 3 3-3"/><path d="M3 13.5h10"/>',
   bolt: '<path d="M9.25 2.1 4.9 8.75H8l-1.25 5.15L11.1 7H8z" fill="currentColor" stroke="none"/>',
   monitor: '<rect x="2.25" y="3" width="11.5" height="8" rx="1.5"/><path d="M6 13.5h4M8 11v2.5"/>',
+  check: '<path d="m3.5 8.5 3 3 6-7"/>',
+  help: '<circle cx="8" cy="8" r="6"/><path d="M6.3 6.3a1.75 1.75 0 0 1 3.4.6c0 1.15-1.7 1.45-1.7 2.6"/><circle cx="8" cy="11.7" r=".7" fill="currentColor" stroke="none"/>',
   moon: '<path d="M13 9.6A5.25 5.25 0 1 1 6.4 3a4.25 4.25 0 0 0 6.6 6.6z"/>',
   sun: '<circle cx="8" cy="8" r="2.75"/><path d="M8 1.75v1.5M8 12.75v1.5M1.75 8h1.5M12.75 8h1.5M3.6 3.6l1.05 1.05M11.35 11.35l1.05 1.05M3.6 12.4l1.05-1.05M11.35 4.65l1.05-1.05"/>',
 } as const;

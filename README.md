@@ -39,6 +39,7 @@ Everything stays in your browser. There is no account, no server and no telemetr
 | <kbd>M</kbd> / <kbd>G</kbd> / <kbd>T</kbd> | Trace map / Graph / Timeline |
 | <kbd>N</kbd> | Capture a new entry |
 | <kbd>/</kbd> | Search |
+| <kbd>?</kbd> | How Traceback works |
 | <kbd>Esc</kbd> | Close the details panel |
 | <kbd>+</kbd> / <kbd>-</kbd> / <kbd>0</kbd> | Zoom in, zoom out, fit the graph |
 

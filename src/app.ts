@@ -82,7 +82,15 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
     store,
     onSaved(entry, mode) {
       state.selectedId = entry.id;
-      if (mode === 'create') notify('ok', `Saved “${entry.title}”.`, entry.type === 'decision' ? 'Now connect the evidence behind it.' : undefined);
+      if (mode === 'create') {
+        const decision = entry.type === 'decision';
+        notify(
+          'ok',
+          `Saved “${entry.title}”.`,
+          decision ? 'Next: connect the evidence behind it.' : 'Next: connect it to the decision it is about.',
+          { label: decision ? 'Connect evidence' : 'Connect', run: () => connect(entry.id) },
+        );
+      }
       render();
       renderNotices();
     },
@@ -303,8 +311,8 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
         <label class="search-box" title="Search (keyboard shortcut: /)">${icon('search', 15)}<span class="visually-hidden">Search entries</span><input id="search" type="search" data-focus="search" value="${escapeHtml(state.search)}" placeholder="Search…" autocomplete="off" spellcheck="false" /><kbd aria-hidden="true">/</kbd></label>
         <p class="search-hint">Try <code>#tag</code>, <code>type:note</code> or <code>is:unsupported</code></p>
       </div>
-      <button type="button" class="primary side-capture" data-action="new-entry" data-focus="capture" title="Capture a source, note, command, file change or decision (keyboard shortcut: N)">${icon('plus', 15)}<span>Capture entry</span><kbd aria-hidden="true">N</kbd></button>
-      <nav class="side-nav" aria-label="Views">${nav}</nav>
+      <button type="button" class="primary side-capture" data-action="new-entry" data-focus="capture" title="Capture a source, note, command, file change or decision (keyboard shortcut: N)">${icon('plus', 15)}<span>New entry</span><kbd aria-hidden="true">N</kbd></button>
+      <nav class="side-nav" aria-label="Views">${nav}<button type="button" class="nav-item nav-help" data-action="help" data-focus="help" title="How Traceback works (keyboard shortcut: ?)">${icon('help', 16)}<span>How it works</span><kbd aria-hidden="true">?</kbd></button></nav>
       <div class="side-foot">
         <div class="theme-switch" role="group" aria-label="Colour theme">${themeSwitchHtml()}</div>
         <div class="backup-actions"><button type="button" class="link-button" data-action="export-backup" data-focus="export-backup"${empty ? ' disabled' : ''}>Export backup</button><label class="link-button">Import backup<input type="file" data-change="import" accept="application/json,.json" hidden /></label></div>
@@ -399,17 +407,16 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
         if (id) deleteEntry(id);
         break;
       case 'link':
-        if (id && !dialogs.openLink(id)) {
-          const entry = store.get(id);
-          notify(
-            'warn',
-            'Nothing left to connect.',
-            entry?.type === 'decision'
-              ? 'Every piece of evidence is already connected to this decision. Capture more first.'
-              : 'This is already connected to every decision. Record a new decision first.',
-          );
-          renderNotices();
-        }
+        if (id) connect(id);
+        break;
+      case 'set-status': {
+        const status = element.getAttribute('data-status');
+        const entry = id ? store.get(id) : undefined;
+        if (entry && isDecisionStatus(status) && status !== entry.status && attempt(() => store.updateEntry(entry.id, { status }))) render();
+        break;
+      }
+      case 'help':
+        dialogs.openHelp();
         break;
       case 'unlink': {
         const decision = element.getAttribute('data-decision');
@@ -481,6 +488,22 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
         break;
       }
     }
+  }
+
+  /** Opens the connect dialog for an entry, or explains why there is nothing to connect yet. */
+  function connect(id: string): void {
+    if (dialogs.openLink(id)) return;
+    const entry = store.get(id);
+    const decision = entry?.type === 'decision';
+    notify(
+      'warn',
+      'Nothing to connect yet.',
+      decision
+        ? 'Add some evidence first: a source, note, command or file change. Then connect it here.'
+        : 'Record a decision first. Then connect this evidence to it.',
+      { label: decision ? 'Add evidence' : 'Record a decision', run: () => dialogs.openEntry(decision ? { type: 'source' } : { type: 'decision' }) },
+    );
+    renderNotices();
   }
 
   function deleteEntry(id: string): void {
@@ -568,11 +591,7 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
   const onChange = (event: Event) => {
     const element = event.target as HTMLElement;
     const kind = element.getAttribute('data-change');
-    if (kind === 'status') {
-      const value = (element as HTMLSelectElement).value;
-      const id = element.getAttribute('data-id');
-      if (id && isDecisionStatus(value) && attempt(() => store.updateEntry(id, { status: value }))) render();
-    } else if (kind === 'import') {
+    if (kind === 'import') {
       void importBackup(element as HTMLInputElement);
     }
   };
@@ -629,6 +648,9 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
         break;
       case '/':
         focusKey('search');
+        break;
+      case '?':
+        dialogs.openHelp();
         break;
       case '+':
       case '=':

@@ -226,12 +226,13 @@ describe('dialogs', () => {
   it('records a decision and opens it', () => {
     mount();
     $('[data-action="new-entry"]').click();
-    const type = $<HTMLSelectElement>('#entry-form [name="type"]');
-    type.value = 'decision';
-    type.dispatchEvent(new Event('change', { bubbles: true }));
+    expect($('#entry-form').dataset.type).toBe('note');
+    expect($('[data-role="type-hint"]').textContent).toContain('noticed');
+    $<HTMLInputElement>('#entry-form input[name="type"][value="decision"]').click();
     expect($('#entry-form').dataset.type).toBe('decision');
+    expect($('[data-role="type-hint"]').textContent).toContain('chose');
     $<HTMLInputElement>('#entry-form [name="title"]').value = 'Ship 0.3';
-    $<HTMLSelectElement>('#entry-form [name="status"]').value = 'proposed';
+    $<HTMLInputElement>('#entry-form input[name="status"][value="proposed"]').click();
     $<HTMLInputElement>('#entry-form [name="tags"]').value = 'release';
     $<HTMLFormElement>('#entry-form').requestSubmit();
     expect(store.workspace.entries).toEqual([expect.objectContaining({ type: 'decision', title: 'Ship 0.3', status: 'proposed', tags: ['release'] })]);
@@ -334,11 +335,66 @@ describe('editing in place', () => {
   it('changes a decision status from the inspector', () => {
     loadExample();
     $('.card-open[data-id="example-d-replay"]').click();
-    const select = $<HTMLSelectElement>('.drawer [data-change="status"]');
-    select.value = 'rejected';
-    select.dispatchEvent(new Event('change', { bubbles: true }));
+    expect($('.drawer [data-status="proposed"]').getAttribute('aria-pressed')).toBe('true');
+    $('.drawer [data-action="set-status"][data-status="rejected"]').click();
     expect(store.get('example-d-replay')?.status).toBe('rejected');
+    expect($('.drawer [data-status="rejected"]').getAttribute('aria-pressed')).toBe('true');
     expect($('[data-action="toggle-closed"]').textContent).toContain('Show replaced and rejected (3)');
+  });
+});
+
+describe('guidance', () => {
+  it('opens the help from the sidebar and with the ? key', () => {
+    mount();
+    $('[data-action="help"]').click();
+    const help = $<HTMLDialogElement>('#help-dialog');
+    expect(help.hasAttribute('open')).toBe(true);
+    expect(help.textContent).toContain('Keep the why next to the what');
+    help.querySelector<HTMLButtonElement>('.dialog-actions [data-close]')!.click();
+    expect(help.hasAttribute('open')).toBe(false);
+    press('?');
+    expect(help.hasAttribute('open')).toBe(true);
+  });
+
+  it('offers the next step after saving evidence', () => {
+    mount();
+    store.createEntry({ type: 'decision', title: 'Pick a host' });
+    remount();
+    $('[data-action="new-entry"]').click();
+    $<HTMLInputElement>('#entry-form input[name="type"][value="source"]').click();
+    $<HTMLInputElement>('#entry-form [name="title"]').value = 'Pricing page';
+    $<HTMLFormElement>('#entry-form').requestSubmit();
+    expect(root.textContent).toContain('Next: connect it to the decision it is about.');
+    $('[data-notice-action]').click();
+    expect($('#link-dialog').hasAttribute('open')).toBe(true);
+    expect($('#link-form').textContent).toContain('Pick a host');
+  });
+
+  it('explains what to do when there is nothing to connect yet', () => {
+    mount();
+    const decision = store.createEntry({ type: 'decision', title: 'Alone' });
+    remount();
+    $(`.card-open[data-id="${decision.id}"]`).click();
+    $('.drawer [data-action="link"]').click();
+    expect(root.textContent).toContain('Add some evidence first');
+    $('[data-notice-action]').click();
+    expect($('#entry-dialog').hasAttribute('open')).toBe(true);
+    expect($('#entry-form').dataset.type).toBe('source');
+  });
+});
+
+describe('editing in place (more)', () => {
+  it('keeps the custom check boxes in sync with the hidden inputs', () => {
+    mount();
+    const decision = store.createEntry({ type: 'decision', title: 'Decide' });
+    store.createEntry({ type: 'note', title: 'Evidence' });
+    remount();
+    $(`.card-open[data-id="${decision.id}"]`).click();
+    $('.drawer [data-action="link"]').click();
+    const box = $<HTMLInputElement>('#link-form .candidate input');
+    expect(box.nextElementSibling?.classList.contains('check')).toBe(true);
+    box.click();
+    expect(box.checked).toBe(true);
   });
 });
 
