@@ -74,19 +74,19 @@ describe('first run', () => {
 describe('trace map', () => {
   it('puts supporting evidence left, challenging evidence right and replaced decisions in the card', () => {
     loadExample();
-    const row = $('.trace-card[data-id="example-d-reread"]').closest('.trace-row')!;
+    const row = $('.trace-card[data-id="example-d-host"]').closest('.trace-row')!;
     expect(row.querySelectorAll('.is-supports .chip-ev')).toHaveLength(3);
     expect(row.querySelectorAll('.is-challenges .chip-ev')).toHaveLength(1);
-    expect(row.querySelector('.trace-replaces')?.textContent).toContain('Keep the trail in memory');
+    expect(row.querySelector('.trace-replaces')?.textContent).toContain('Keep the site on our shared hosting');
     expect(row.querySelector('.trace-replaces em')?.textContent).toBe('2 reasons against');
-    expect(row.querySelector('.chip-ev[data-id="example-c-multitab"] .shared')?.textContent).toBe('×2');
+    expect(row.querySelector('.chip-ev[data-id="example-c-speedtest"] .shared')?.textContent).toBe('×2');
     expect($$('.flow.is-supports path').length).toBeGreaterThan(0);
   });
 
   it('filters rows and can include replaced decisions', () => {
     loadExample();
     $('[data-filter="proposed"]').click();
-    expect($$('.trace-card').map((card) => card.dataset.id)).toEqual(['example-d-replay']);
+    expect($$('.trace-card').map((card) => card.dataset.id)).toEqual(['example-d-newsletter']);
     $('[data-filter="challenged"]').click();
     expect($$('.trace-row').every((row) => row.querySelector('.is-challenges .chip-ev'))).toBe(true);
     $('[data-filter="live"]').click();
@@ -108,8 +108,8 @@ describe('trace map', () => {
 
   it('opens an entry in the drawer and closes it with Escape', () => {
     loadExample();
-    $('.chip-ev[data-id="example-c-multitab"]').click();
-    expect($('.drawer h2').textContent).toBe('Simulate two app tabs writing to the same storage');
+    $('.chip-ev[data-id="example-c-speedtest"]').click();
+    expect($('.drawer h2').textContent).toBe('Speed test: Vercel preview vs. shared hosting');
     expect($('.drawer').textContent).toContain('Supports');
     expect($('.drawer').textContent).toContain('Challenges');
     expect(document.activeElement).toBe($('.drawer h2'));
@@ -120,10 +120,10 @@ describe('trace map', () => {
   it('searches decisions through their evidence', () => {
     loadExample();
     const search = $<HTMLInputElement>('#search');
-    search.value = 'MDN';
+    search.value = 'Stripe';
     search.dispatchEvent(new Event('input', { bubbles: true }));
-    expect($$('.trace-card').map((card) => card.dataset.id)).toEqual(['example-d-bridge']);
-    expect($('.chip-ev[data-id="example-s-mdn"]').classList.contains('is-match')).toBe(true);
+    expect($$('.trace-card').map((card) => card.dataset.id)).toEqual(['example-d-checkout']);
+    expect($('.chip-ev[data-id="example-s-stripe"]').classList.contains('is-match')).toBe(true);
   });
 
   it('lists evidence that is not connected yet', () => {
@@ -188,14 +188,14 @@ describe('graph', () => {
   it('selects nodes by click and keyboard, dims the rest and keeps positions stable', () => {
     loadExample();
     press('g');
-    const before = $('.g-node[data-id="example-d-icons"]').getAttribute('transform');
-    clickSvg($('.g-node[data-id="example-d-bridge"]'));
-    expect($('.inspector h2').textContent).toBe('Deliver browser captures through a content-script bridge');
-    expect($('.g-node[data-id="example-d-icons"]').classList.contains('is-dim')).toBe(true);
-    expect($('.g-node[data-id="example-s-mdn"]').classList.contains('is-dim')).toBe(false);
-    expect($('.g-node[data-id="example-d-icons"]').getAttribute('transform')).toBe(before);
-    press('Enter', $('.g-node[data-id="example-d-port"]'));
-    expect($('.inspector h2').textContent).toBe('Refuse to start when port 5173 is taken');
+    const before = $('.g-node[data-id="example-d-photos"]').getAttribute('transform');
+    clickSvg($('.g-node[data-id="example-d-checkout"]'));
+    expect($('.inspector h2').textContent).toBe('Use a hosted checkout for online orders');
+    expect($('.g-node[data-id="example-d-photos"]').classList.contains('is-dim')).toBe(true);
+    expect($('.g-node[data-id="example-s-stripe"]').classList.contains('is-dim')).toBe(false);
+    expect($('.g-node[data-id="example-d-photos"]').getAttribute('transform')).toBe(before);
+    press('Enter', $('.g-node[data-id="example-d-domain"]'));
+    expect($('.inspector h2').textContent).toBe('Keep our current domain name');
     press('Escape');
     expect($('.inspector').textContent).toContain('Select a node');
   });
@@ -321,23 +321,23 @@ describe('dialogs', () => {
 describe('editing in place', () => {
   it('deletes an entry and brings it back with Undo', () => {
     loadExample();
-    $('.card-open[data-id="example-d-port"]').click();
+    $('.card-open[data-id="example-d-domain"]').click();
     $('.drawer [data-action="delete"]').click();
-    expect(store.get('example-d-port')).toBeUndefined();
-    expect(root.textContent).toContain('Deleted “Refuse to start when port 5173 is taken”.');
+    expect(store.get('example-d-domain')).toBeUndefined();
+    expect(root.textContent).toContain('Deleted “Keep our current domain name”.');
     expect(root.textContent).toContain('2 connections went with it.');
     $('[data-notice-action]').click();
-    expect(store.get('example-d-port')).toBeTruthy();
-    expect(store.workspace.links.filter((link) => link.decisionId === 'example-d-port')).toHaveLength(2);
-    expect($('.drawer h2').textContent).toBe('Refuse to start when port 5173 is taken');
+    expect(store.get('example-d-domain')).toBeTruthy();
+    expect(store.workspace.links.filter((link) => link.decisionId === 'example-d-domain')).toHaveLength(2);
+    expect($('.drawer h2').textContent).toBe('Keep our current domain name');
   });
 
   it('changes a decision status from the inspector', () => {
     loadExample();
-    $('.card-open[data-id="example-d-replay"]').click();
+    $('.card-open[data-id="example-d-newsletter"]').click();
     expect($('.drawer [data-status="proposed"]').getAttribute('aria-pressed')).toBe('true');
     $('.drawer [data-action="set-status"][data-status="rejected"]').click();
-    expect(store.get('example-d-replay')?.status).toBe('rejected');
+    expect(store.get('example-d-newsletter')?.status).toBe('rejected');
     expect($('.drawer [data-status="rejected"]').getAttribute('aria-pressed')).toBe('true');
     expect($('[data-action="toggle-closed"]').textContent).toContain('Show replaced and rejected (3)');
   });

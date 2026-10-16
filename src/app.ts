@@ -346,7 +346,7 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
         <div class="preview-col is-for">${chip('source', 'Pricing page')}${chip('command', 'Speed test on the preview')}</div>
         <svg class="flow" width="48" height="80" viewBox="0 0 48 80"><path d="M0 18C24 18 24 37 48 37"/><path d="M0 62C24 62 24 43 48 43"/></svg>
         <div class="trace-card"><h3>Host the website on Vercel</h3><div class="trace-meta"><span class="pill status-accepted">Accepted</span><span class="trace-tally"><b class="for">2</b> for · <b class="against">1</b> against</span></div><div class="balance"><span class="s" style="flex:2"></span><span class="c" style="flex:1"></span></div></div>
-        <svg class="flow is-challenges" width="48" height="80" viewBox="0 0 48 80"><path d="M48 18C24 18 24 40 0 40"/></svg>
+        <svg class="flow is-challenges" width="48" height="80" viewBox="0 0 48 80"><path d="M48 40H0"/></svg>
         <div class="preview-col is-against">${chip('note', 'Lock-in for serverless functions')}</div>
         <figcaption>Evidence for a decision on the left, against it on the right.</figcaption>
       </figure>

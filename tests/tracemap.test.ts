@@ -19,16 +19,16 @@ describe('buildTraceMap', () => {
   });
 
   it('splits evidence by relation and records replaced decisions', () => {
-    const row = buildTraceMap(example()).rows.find((candidate) => candidate.decision.id === 'example-d-reread')!;
-    expect(row.supports.map(({ entry }) => entry.id).sort()).toEqual(['example-c-multitab', 'example-f-store', 'example-n-newtab']);
-    expect(row.challenges.map(({ entry }) => entry.id)).toEqual(['example-n-race']);
-    expect(row.replaces).toEqual([{ entry: expect.objectContaining({ id: 'example-d-snapshot' }), against: 2 }]);
+    const row = buildTraceMap(example()).rows.find((candidate) => candidate.decision.id === 'example-d-host')!;
+    expect(row.supports.map(({ entry }) => entry.id).sort()).toEqual(['example-c-speedtest', 'example-n-preview', 'example-s-vercel']);
+    expect(row.challenges.map(({ entry }) => entry.id)).toEqual(['example-n-lockin']);
+    expect(row.replaces).toEqual([{ entry: expect.objectContaining({ id: 'example-d-shared' }), against: 2 }]);
   });
 
   it('filters and counts with the same candidate set', () => {
     const index = example();
     const map = buildTraceMap(index, { filter: 'proposed' });
-    expect(map.rows.map((row) => row.decision.id)).toEqual(['example-d-replay']);
+    expect(map.rows.map((row) => row.decision.id)).toEqual(['example-d-newsletter']);
     expect(map.counts.proposed).toBe(1);
     expect(map.counts.live).toBe(buildTraceMap(index).rows.length);
     expect(buildTraceMap(index, { filter: 'challenged' }).rows.every((row) => row.challenges.length > 0)).toBe(true);
@@ -38,16 +38,16 @@ describe('buildTraceMap', () => {
   it('appends replaced and rejected decisions after the live ones when asked', () => {
     const map = buildTraceMap(example(), { showClosed: true });
     const closed = map.rows.filter((row) => !row.live);
-    expect(closed.map((row) => row.decision.id).sort()).toEqual(['example-d-fragment', 'example-d-snapshot']);
+    expect(closed.map((row) => row.decision.id).sort()).toEqual(['example-d-own-form', 'example-d-shared']);
     expect(map.rows.slice(-2).every((row) => !row.live)).toBe(true);
     expect(closed[0].replacedBy?.type).toBe('decision');
   });
 
   it('finds decisions through the evidence that matches the search', () => {
-    const map = buildTraceMap(example(), { search: 'MDN' });
-    expect(map.rows.map((row) => row.decision.id)).toEqual(['example-d-bridge']);
-    expect(map.matches?.has('example-s-mdn')).toBe(true);
-    expect(buildTraceMap(example(), { search: 'Keep the trail in memory' }).rows.map((row) => row.decision.id)).toEqual(['example-d-reread']);
+    const map = buildTraceMap(example(), { search: 'Stripe' });
+    expect(map.rows.map((row) => row.decision.id)).toEqual(['example-d-checkout']);
+    expect(map.matches?.has('example-s-stripe')).toBe(true);
+    expect(buildTraceMap(example(), { search: 'Keep the site on our shared hosting' }).rows.map((row) => row.decision.id)).toEqual(['example-d-host']);
   });
 
   it('summarises live decisions and counts shared evidence', () => {
@@ -59,7 +59,7 @@ describe('buildTraceMap', () => {
     expect(map.summary.supportingLinks).toBe(linksOnLive.filter((link) => link.kind === 'supports').length);
     expect(map.summary.openChallenges).toBe(linksOnLive.filter((link) => link.kind === 'challenges').length);
     expect(map.summary.superseded).toBe(2);
-    expect(map.linkCounts.get('example-c-multitab')).toBe(2);
+    expect(map.linkCounts.get('example-c-speedtest')).toBe(2);
     expect(Object.values(map.summary.evidenceByType).reduce((sum, count) => sum + count, 0)).toBe(
       EXAMPLE_WORKSPACE.entries.filter((entry) => entry.type !== 'decision').length,
     );

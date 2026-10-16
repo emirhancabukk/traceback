@@ -30,7 +30,7 @@ Everything stays in your browser. There is no account, no server and no telemetr
 - **Exports**: one decision as a Markdown or JSON bundle (UTC timestamps, quotes, links); the whole workspace as a JSON backup you can import again.
 - **Browser extension** for Chrome, Brave and Firefox: capture the current page and selected text with one click or <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd>.
 - **Safe across tabs**: open Traceback in as many tabs as you like; no tab overwrites another's work.
-- **Example workspace**: the real decision log behind Traceback itself, added only when you ask and removed in one click.
+- **Example data**: a made-up café building its website, added only when you ask and removed in one click.
 
 ### Keyboard
 
@@ -119,7 +119,7 @@ Traceback has no runtime dependencies. The core is plain TypeScript with no DOM 
 
 ## Roadmap
 
-- Replay how a trail formed with a time slider (proposed; it is in the example workspace)
+- Replay how a trail formed with a time slider
 - Capture from the browser's context menu
 - Desktop build with SQLite storage
 

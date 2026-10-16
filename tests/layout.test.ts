@@ -88,11 +88,11 @@ describe('buildGraph', () => {
     const model = buildGraph(index);
     expect(model.nodes).toHaveLength(EXAMPLE_WORKSPACE.entries.length);
     expect(model.edges.filter((edge) => edge.kind === 'replaces')).toEqual([
-      expect.objectContaining({ from: 'example-d-fragment', to: 'example-d-bridge' }),
-      expect.objectContaining({ from: 'example-d-snapshot', to: 'example-d-reread' }),
+      expect.objectContaining({ from: 'example-d-shared', to: 'example-d-host' }),
+      expect.objectContaining({ from: 'example-d-own-form', to: 'example-d-checkout' }),
     ]);
-    expect(model.neighbours.get('example-d-bridge')?.has('example-s-mdn')).toBe(true);
-    expect(model.neighbours.get('example-s-mdn')?.has('example-d-bridge')).toBe(true);
+    expect(model.neighbours.get('example-d-checkout')?.has('example-s-stripe')).toBe(true);
+    expect(model.neighbours.get('example-s-stripe')?.has('example-d-checkout')).toBe(true);
     const positions = layoutGraph(model);
     expect(positions.size).toBe(model.nodes.length);
   });
