@@ -2,7 +2,7 @@ import { buildGraph, layoutGraph, type GraphModel } from '../core/graph';
 import { boundsOf, type Bounds, type Point } from '../core/layout';
 import { STATUS_LABELS, typeLabel, type Entry } from '../core/model';
 import { entryMatches, hasFilters, parseQuery, type WorkspaceIndex } from '../core/query';
-import { REPLACED_HINT, escapeHtml, plural, truncate } from './format';
+import { escapeHtml, plural, truncate } from './format';
 import { icon } from './icons';
 import { inspectorHtml } from './inspector';
 
@@ -68,12 +68,8 @@ export function renderGraph(index: WorkspaceIndex, state: GraphViewState): Rende
   const links = model.edges.filter((edge) => edge.kind !== 'replaces').length;
   const replacements = model.edges.length - links;
   const head = `<header class="view-head">
-    <div><p class="eyebrow">WORKSPACE / PERSONAL</p><h1 id="view-title">Graph</h1><p class="sub">How decisions and their evidence connect. Rings are decisions; dots are evidence.</p></div>
-    <div class="summary">
-      <div class="stat"><b>${model.nodes.length}</b><small>entries</small></div>
-      <div class="stat" title="Evidence connected to decisions, for or against"><b class="is-accent">${links}</b><small>connections</small></div>
-      <div class="stat" title="${REPLACED_HINT}"><b>${replacements}</b><small>replaced decisions</small></div>
-    </div>
+    <h1 id="view-title">Graph</h1>
+    <p class="view-summary">${plural(model.nodes.length, 'entry', 'entries')}<span class="sep">·</span>${plural(links, 'connection')}<span class="sep">·</span>${plural(replacements, 'replaced decision')}</p>
   </header>`;
 
   if (!model.nodes.length) {

@@ -6,7 +6,7 @@ import { TRACE_FILTERS, type TraceFilter } from './core/tracemap';
 import { createDialogs } from './ui/dialogs';
 import { escapeHtml, plural } from './ui/format';
 import { attachGraph, renderGraph, type GraphController, type GraphTransform } from './ui/graph-view';
-import { icon, type IconName } from './ui/icons';
+import { icon, typeIcon, type IconName } from './ui/icons';
 import { THEME_KEY, applyTheme, isTheme, readTheme, saveTheme, type Theme } from './ui/theme';
 import { inspectorHtml } from './ui/inspector';
 import { timelineHtml } from './ui/timeline-view';
@@ -277,7 +277,7 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
     shell.innerHTML = `<div class="shell view-is-${state.view}${empty ? ' is-empty' : ''}">
       ${sidebarHtml(empty)}
       <main class="main" id="main">
-        ${examples ? '<div class="example-banner"><span>You are looking at the example workspace: the real decision log behind Traceback itself.</span><button type="button" class="link-button" data-action="remove-examples" data-focus="remove-examples">Remove example data</button></div>' : ''}
+        ${examples ? '<div class="example-banner"><span><strong>Example data.</strong> A made-up website project, so you can see how Traceback works.</span><button type="button" class="link-button" data-action="remove-examples" data-focus="remove-examples">Remove example</button></div>' : ''}
         ${content}
       </main>
       ${drawer}
@@ -316,7 +316,7 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
       <div class="side-foot">
         <div class="theme-switch" role="group" aria-label="Colour theme">${themeSwitchHtml()}</div>
         <div class="backup-actions"><button type="button" class="link-button" data-action="export-backup" data-focus="export-backup"${empty ? ' disabled' : ''}>Export backup</button><label class="link-button">Import backup<input type="file" data-change="import" accept="application/json,.json" hidden /></label></div>
-        <div class="storage-status"><span class="status-dot${persistent ? '' : ' is-off'}"></span>${persistent ? 'Stored locally' : 'Not saved: storage blocked'} <small>· private by default</small></div>
+        <div class="storage-status${persistent ? '' : ' is-off'}">${persistent ? 'Saved in this browser only' : 'Not saved: this browser blocks storage'}</div>
       </div>
     </aside>`;
   }
@@ -336,17 +336,21 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
   }
 
   function onboardingHtml(): string {
+    const chip = (type: EntryType, title: string) =>
+      `<span class="chip-ev"><i class="type-${type}">${typeIcon(type, 12)}</i><span class="chip-title">${title}</span></span>`;
     return `<section class="onboarding" aria-labelledby="view-title">
-      <div class="onboarding-mark">${icon('bolt', 26)}</div>
-      <h1 id="view-title">Your trail is empty</h1>
-      <p class="lead">Traceback keeps the evidence behind your decisions connected, so months later you can still answer “why did we do it this way?”</p>
-      <ol class="loop">
-        <li><b>1</b><div><strong>Capture evidence</strong><p>Save a source, note, command or file change while you work.</p></div></li>
-        <li><b>2</b><div><strong>Record the decision</strong><p>Say what you chose and why it mattered.</p></div></li>
-        <li><b>3</b><div><strong>Connect the why</strong><p>Link each piece of evidence as support for the decision, or as a challenge to it.</p></div></li>
-      </ol>
-      <div class="onboarding-actions"><button type="button" class="primary" data-action="new-entry" data-focus="first-entry">Capture your first entry</button><button type="button" class="secondary" data-action="load-example" data-focus="load-example">Explore an example workspace</button></div>
-      <p class="muted">The example is the real decision log behind Traceback itself. You can remove it in one click.</p>
+      <h1 id="view-title">Nothing here yet</h1>
+      <p class="lead">Traceback is a notebook for decisions. Write down what you decided, then attach what you read, tried and noticed along the way.</p>
+      <div class="onboarding-actions"><button type="button" class="primary" data-action="new-entry" data-type="decision" data-focus="first-entry">Record a decision</button><button type="button" class="secondary" data-action="load-example" data-focus="load-example">Show me an example</button></div>
+      <figure class="preview" aria-hidden="true">
+        <div class="preview-col is-for">${chip('source', 'Pricing page')}${chip('command', 'Speed test on the preview')}</div>
+        <svg class="flow" width="48" height="80" viewBox="0 0 48 80"><path d="M0 18C24 18 24 37 48 37"/><path d="M0 62C24 62 24 43 48 43"/></svg>
+        <div class="trace-card"><h3>Host the website on Vercel</h3><div class="trace-meta"><span class="pill status-accepted">Accepted</span><span class="trace-tally"><b class="for">2</b> for · <b class="against">1</b> against</span></div><div class="balance"><span class="s" style="flex:2"></span><span class="c" style="flex:1"></span></div></div>
+        <svg class="flow is-challenges" width="48" height="80" viewBox="0 0 48 80"><path d="M48 18C24 18 24 40 0 40"/></svg>
+        <div class="preview-col is-against">${chip('note', 'Lock-in for serverless functions')}</div>
+        <figcaption>Evidence for a decision on the left, against it on the right.</figcaption>
+      </figure>
+      <button type="button" class="link-button" data-action="help" data-focus="onboarding-help">How it works</button>
     </section>`;
   }
 

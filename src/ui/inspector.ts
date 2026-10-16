@@ -23,11 +23,11 @@ export function inspectorHtml(index: WorkspaceIndex, entry: Entry | undefined, o
   return entry.type === 'decision' ? decisionHtml(index, entry, options) : evidenceHtml(index, entry, options);
 }
 
-function head(eyebrow: string, entry: Entry, options: InspectorOptions): string {
+function head(entry: Entry, options: InspectorOptions): string {
   const close = options.drawer
     ? `<button type="button" class="icon-button" data-action="close-drawer" data-focus="drawer-close" aria-label="Close details">${icon('close', 18)}</button>`
     : '';
-  return `<div class="inspector-head"><div><p class="eyebrow">${escapeHtml(eyebrow)}</p><h2 tabindex="-1" data-focus="inspector-title">${escapeHtml(entry.title)}</h2></div>${close}</div>`;
+  return `<div class="inspector-head"><h2 tabindex="-1" data-focus="inspector-title">${escapeHtml(entry.title)}</h2>${close}</div>`;
 }
 
 function extras(entry: Entry): string {
@@ -70,14 +70,13 @@ function decisionHtml(index: WorkspaceIndex, decision: Entry, options: Inspector
   const item = ({ entry, link }: Connected) => linkedItem(decision.id, entry.id, entry, link.kind);
   const total = supports.length + challenges.length;
 
-  return `${head('DECISION', decision, options)}
+  return `${head(decision, options)}
     <div class="inspector-meta"><span class="pill status-${status}">${STATUS_LABELS[status]}</span><time datetime="${decision.createdAt}">${formatDateTime(decision.createdAt)}</time>${ORIGIN_NOTES[decision.origin] ? `<span>${ORIGIN_NOTES[decision.origin]}</span>` : ''}</div>
     <div class="field-inline"><span>Status</span><div class="segmented" role="group" aria-label="Status">${statuses.map((option) => `<button type="button" class="seg-option status-${option}${option === status ? ' on' : ''}" data-action="set-status" data-id="${decision.id}" data-status="${option}" data-focus="status:${option}" aria-pressed="${option === status}">${STATUS_LABELS[option]}</button>`).join('')}</div></div>
     ${replacement ? `<p class="relation-line" title="${REPLACED_HINT}">Replaced by ${entryButton(replacement)}</p>` : ''}
     ${replaces.map((old) => `<p class="relation-line" title="${REPLACED_HINT}">Replaces ${entryButton(old, true)}</p>`).join('')}
     <div class="inspector-body">${decision.body ? escapeHtml(decision.body) : '<span class="muted">No rationale recorded yet. Edit the decision to say why.</span>'}</div>
     ${extras(decision)}
-    <p class="eyebrow">EVIDENCE BALANCE</p>
     <div class="balance is-large" aria-hidden="true">${total ? `<span class="s" style="flex:${supports.length}"></span><span class="c" style="flex:${challenges.length}"></span>` : ''}</div>
     <div class="balance-legend"><span>${supports.length} support</span><span>${plural(challenges.length, 'challenge')}</span></div>
     ${section('Supporting evidence', supports.map(item), 'support')}
@@ -98,7 +97,7 @@ function evidenceHtml(index: WorkspaceIndex, entry: Entry, options: InspectorOpt
   const challenges = decisions.filter(({ link }) => link.kind === 'challenges');
   const item = ({ entry: decision, link }: Connected) => linkedItem(decision.id, entry.id, decision, link.kind);
 
-  return `${head(typeLabel(entry.type).toUpperCase(), entry, options)}
+  return `${head(entry, options)}
     <div class="inspector-meta"><span class="pill pill-${entry.type}">${typeLabel(entry.type)}</span><time datetime="${entry.createdAt}">${formatDateTime(entry.createdAt)}</time>${ORIGIN_NOTES[entry.origin] ? `<span>${ORIGIN_NOTES[entry.origin]}</span>` : ''}</div>
     ${entry.quote ? `<blockquote class="inspector-quote">${escapeHtml(entry.quote)}</blockquote>` : ''}
     ${entry.body ? `<div class="inspector-body">${escapeHtml(entry.body)}</div>` : ''}

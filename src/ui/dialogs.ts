@@ -54,7 +54,7 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
   host.innerHTML = `
     <dialog id="entry-dialog" aria-labelledby="entry-dialog-title">
       <form id="entry-form" class="dialog-form" data-type="note" novalidate>
-        <div class="dialog-head"><div><p class="eyebrow" data-role="eyebrow">NEW CAPTURE</p><h2 id="entry-dialog-title" data-role="heading">Add to your trail</h2><p class="dialog-help" data-role="help">A piece of evidence you may want later, or a decision you made.</p></div>${closeButton}</div>
+        <div class="dialog-head"><div><h2 id="entry-dialog-title" data-role="heading">New entry</h2></div>${closeButton}</div>
         <input type="hidden" name="id" />
         <fieldset class="type-picker"><legend>What are you adding?</legend><div class="type-options">${ENTRY_TYPES.map((type) => `<label class="type-option"><input type="radio" name="type" value="${type}" /><span class="type-option-icon type-${type}">${typeIcon(type, 15)}</span><span>${typeLabel(type)}</span></label>`).join('')}</div><p class="type-hint" data-role="type-hint"></p></fieldset>
         <label>Title<input name="title" maxlength="300" placeholder="What happened?" autocomplete="off" /></label>
@@ -69,7 +69,7 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
     </dialog>
     <dialog id="link-dialog" aria-labelledby="link-dialog-title">
       <form id="link-form" class="dialog-form" novalidate>
-        <div class="dialog-head"><div><p class="eyebrow">CONNECT EVIDENCE</p><h2 id="link-dialog-title" data-role="heading">Connect evidence to this decision</h2><p class="dialog-help" data-role="help"></p></div>${closeButton}</div>
+        <div class="dialog-head"><div><h2 id="link-dialog-title" data-role="heading">Connect evidence</h2><p class="dialog-help" data-role="help"></p></div>${closeButton}</div>
         <div class="relation-picker segmented" role="radiogroup" aria-label="Relation"><label class="seg-option is-for"><input type="radio" name="kind" value="supports" checked />${icon('check', 14)}<span>Supports it</span></label><label class="seg-option is-against"><input type="radio" name="kind" value="challenges" />${icon('close', 14)}<span>Challenges it</span></label></div>
         <label class="filter-field"><span class="visually-hidden">Filter the list</span><input type="search" data-role="filter" placeholder="Filter…" autocomplete="off" /></label>
         <div class="candidate-list" data-role="candidates"></div>
@@ -79,7 +79,7 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
     </dialog>
     <dialog id="supersede-dialog" aria-labelledby="supersede-dialog-title">
       <form id="supersede-form" class="dialog-form" novalidate>
-        <div class="dialog-head"><div><p class="eyebrow">REPLACE DECISION</p><h2 id="supersede-dialog-title">Which decision replaced this one?</h2><p class="dialog-help" data-role="help"></p></div>${closeButton}</div>
+        <div class="dialog-head"><div><h2 id="supersede-dialog-title">Which decision replaced this one?</h2><p class="dialog-help" data-role="help"></p></div>${closeButton}</div>
         <label class="filter-field"><span class="visually-hidden">Filter the list</span><input type="search" data-role="filter" placeholder="Filter…" autocomplete="off" /></label>
         <div class="candidate-list" data-role="candidates"></div>
         <p class="form-error" role="alert" data-role="error"></p>
@@ -88,13 +88,13 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
     </dialog>
     <dialog id="help-dialog" aria-labelledby="help-dialog-title">
       <div class="dialog-form">
-        <div class="dialog-head"><div><p class="eyebrow">HOW IT WORKS</p><h2 id="help-dialog-title">Keep the why next to the what</h2><p class="dialog-help">Months after a decision, nobody remembers why it was made. Traceback keeps the reasons attached, so the answer is one click away.</p></div>${closeButton}</div>
+        <div class="dialog-head"><div><h2 id="help-dialog-title">How Traceback works</h2><p class="dialog-help">A notebook for decisions. Each decision keeps the evidence that led to it, so you can still explain it months later.</p></div>${closeButton}</div>
         <ol class="help-steps">
-          <li><b>1</b><div><strong>Save evidence while you work</strong><p>An article you read, a test you ran, a risk you noticed. Press <kbd>N</kbd>, or use the browser extension on any page.</p></div></li>
-          <li><b>2</b><div><strong>Record the decision</strong><p>Write what you chose and why, in a sentence or two.</p></div></li>
-          <li><b>3</b><div><strong>Connect the evidence</strong><p>Open the decision, press <em>Connect evidence</em>, and mark each piece as a reason for it or against it.</p></div></li>
-          <li><b>4</b><div><strong>Come back later</strong><p>The trace map shows every decision with its reasons. Export one as Markdown to share it.</p></div></li>
+          <li><strong>Save what you find.</strong> A page you read, a test you ran, a risk you noticed. Press <kbd>N</kbd>.</li>
+          <li><strong>Write down the decision.</strong> What you chose, and why, in a sentence or two.</li>
+          <li><strong>Connect them.</strong> Open the decision, press Connect evidence, and mark each piece as for or against.</li>
         </ol>
+        <section class="help-extension"><strong>The browser extension</strong><p>Saves the page you are reading in one click: its title, its address and any text you selected. It arrives here as a source, ready to connect. Without it you copy and paste those by hand.</p></section>
         <div class="help-example"><strong>Example.</strong> You are choosing where to host a website. You save two pricing pages and a speed test you ran, then record the decision <em>“Host on Vercel”</em>. The speed test and one pricing page support it; a note about lock-in challenges it. A year later, the trace map still tells you why.</div>
         <dl class="help-keys">
           <div><dt>New entry</dt><dd><kbd>N</kbd></dd></div>
@@ -251,13 +251,7 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
       field<HTMLInputElement>('tags').value = entry?.tags.join(', ') ?? '';
       fillStatuses(entry?.status ?? 'accepted');
       entryForm.toggleAttribute('data-quote', Boolean(entry?.quote));
-      part(entryForm, 'eyebrow').textContent = entry ? 'EDIT ENTRY' : 'NEW CAPTURE';
-      part(entryForm, 'heading').textContent = entry ? 'Edit entry' : type === 'decision' ? 'Record a decision' : 'Add to your trail';
-      part(entryForm, 'help').textContent = entry
-        ? 'Changes are saved to this browser right away.'
-        : type === 'decision'
-          ? 'Say what you chose and why. Connect the evidence afterwards.'
-          : 'A piece of evidence you may want later, or a decision you made.';
+      part(entryForm, 'heading').textContent = entry ? 'Edit entry' : type === 'decision' ? 'Record a decision' : 'New entry';
       part(entryForm, 'submit').textContent = entry ? 'Save changes' : 'Save entry';
       open(entryDialog, entryForm);
       field<HTMLInputElement>('title').focus();
@@ -275,10 +269,8 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
       if (!candidates.length) return false;
       linkAnchor = anchorId;
       linkForm.reset();
-      part(linkForm, 'heading').textContent = isDecision ? 'Connect evidence to this decision' : 'Connect this to decisions';
-      part(linkForm, 'help').textContent = isDecision
-        ? `Pick the evidence behind “${anchor.title}”, then choose whether it supports the decision or challenges it.`
-        : `Pick the decisions “${anchor.title}” matters for, then choose whether it supports or challenges them.`;
+      part(linkForm, 'heading').textContent = isDecision ? 'Connect evidence' : 'Connect to decisions';
+      part(linkForm, 'help').textContent = `For “${anchor.title}”`;
       part(linkForm, 'candidates').innerHTML = candidates.map((entry) => candidateHtml(entry, 'checkbox', 'pick')).join('');
       open(linkDialog, linkForm);
       part<HTMLInputElement>(linkForm, 'filter').focus();
@@ -293,7 +285,7 @@ export function createDialogs(root: HTMLElement, deps: DialogDeps): Dialogs {
       if (!candidates.length) return false;
       supersedeId = decisionId;
       supersedeForm.reset();
-      part(supersedeForm, 'help').textContent = `“${decision.title}” will be marked as replaced. It is not deleted: it stays in your trail, linked to the decision that replaced it.`;
+      part(supersedeForm, 'help').textContent = `“${decision.title}” is not deleted. It stays in your trail, linked to the decision that replaced it.`;
       part(supersedeForm, 'candidates').innerHTML = candidates.map((entry) => candidateHtml(entry, 'radio', 'replacement')).join('');
       const current = decision.supersededBy
         ? supersedeForm.querySelector<HTMLInputElement>(`input[value="${decision.supersededBy}"]`)

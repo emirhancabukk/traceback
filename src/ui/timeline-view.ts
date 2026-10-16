@@ -1,6 +1,6 @@
 import { ENTRY_TYPES, STATUS_LABELS, typeLabel, type Entry, type EntryType } from '../core/model';
 import { decisionsFor, searchEntries, workspaceStats, type WorkspaceIndex } from '../core/query';
-import { escapeHtml, formatDateTime } from './format';
+import { escapeHtml, formatDateTime, plural } from './format';
 import { icon, typeIcon } from './icons';
 import { inspectorHtml } from './inspector';
 
@@ -26,12 +26,8 @@ export function timelineHtml(index: WorkspaceIndex, state: TimelineViewState): s
 
   return `<section class="view view-timeline" aria-labelledby="view-title">
     <header class="view-head">
-      <div><p class="eyebrow">WORKSPACE / PERSONAL</p><h1 id="view-title">Timeline</h1><p class="sub">Everything you captured, newest first.</p></div>
-      <div class="summary">
-        <div class="stat"><b>${stats.total}</b><small>total entries</small></div>
-        <div class="stat"><b>${stats.decisions}</b><small>${stats.unsupported.length ? `decisions · ${stats.unsupported.length} without support` : 'decisions'}</small></div>
-        <div class="stat"><b class="is-accent">${stats.linkedEvidence}/${stats.evidence}</b><small>evidence connected</small></div>
-      </div>
+      <h1 id="view-title">Timeline</h1>
+      <p class="view-summary">${plural(stats.total, 'entry', 'entries')}<span class="sep">·</span>${stats.linkedEvidence} of ${stats.evidence} connected to a decision</p>
     </header>
     <div class="chip-row" role="toolbar" aria-label="Filter by type">${chips}<span class="spacer"></span><span class="result-count">${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}</span></div>
     <div class="content-grid">
@@ -46,8 +42,8 @@ function card(index: WorkspaceIndex, entry: Entry, selected: boolean): string {
   const supports = links.filter(({ link }) => link.kind === 'supports').length;
   const challenges = links.length - supports;
   const linked = [
-    supports ? `↳ supports ${supports} decision${supports === 1 ? '' : 's'}` : '',
-    challenges ? `↳ challenges ${challenges}` : '',
+    supports ? `Supports ${supports} decision${supports === 1 ? '' : 's'}` : '',
+    challenges ? `Challenges ${challenges}` : '',
   ]
     .filter(Boolean)
     .join(' · ');

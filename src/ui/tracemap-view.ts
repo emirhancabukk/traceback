@@ -1,4 +1,4 @@
-import { EVIDENCE_TYPES, STATUS_LABELS, typeLabel, type Entry } from '../core/model';
+import { STATUS_LABELS, type Entry } from '../core/model';
 import type { WorkspaceIndex } from '../core/query';
 import { TRACE_FILTERS, buildTraceMap, type TraceFilter, type TraceMap, type TraceRow } from '../core/tracemap';
 import { REPLACED_HINT, escapeHtml, formatShort, plural } from './format';
@@ -27,22 +27,9 @@ export function traceMapHtml(index: WorkspaceIndex, state: TraceMapViewState): s
 
 function header(map: TraceMap): string {
   const { summary } = map;
-  const types = EVIDENCE_TYPES.map((type) => {
-    const count = summary.evidenceByType[type];
-    return `<span class="type-count type-${type}" title="${count} ${typeLabel(type, count !== 1).toLowerCase()}"><i>${typeIcon(type, 12)}</i><b>${count}</b></span>`;
-  }).join('');
-  const described = EVIDENCE_TYPES.map((type) => {
-    const count = summary.evidenceByType[type];
-    return `${count} ${typeLabel(type, count !== 1).toLowerCase()}`;
-  }).join(', ');
   return `<header class="view-head">
-    <div><p class="eyebrow">WORKSPACE / PERSONAL</p><h1 id="view-title">Trace map</h1><p class="sub">Every current decision, with the evidence for it on the left and against it on the right.</p></div>
-    <div class="summary">
-      <div class="stat" title="Decisions that are proposed or accepted, not replaced or rejected"><b>${summary.liveDecisions}</b><small>current decisions</small></div>
-      <div class="stat is-for" title="Connections from evidence that supports a current decision"><b>${summary.supportingLinks}</b><small>reasons for</small></div>
-      <div class="stat is-against" title="Connections from evidence that argues against a current decision"><b>${summary.openChallenges}</b><small>reasons against</small></div>
-      <div class="stat stat-types" role="img" aria-label="Evidence by type: ${described}"><div class="type-counts">${types}</div><small>evidence by type</small></div>
-    </div>
+    <h1 id="view-title">Trace map</h1>
+    <p class="view-summary">${plural(summary.liveDecisions, 'decision')}<span class="sep">·</span><span class="for">${summary.supportingLinks} reasons for</span><span class="sep">·</span><span class="against">${summary.openChallenges} against</span></p>
   </header>`;
 }
 
@@ -84,7 +71,7 @@ function content(map: TraceMap, state: TraceMapViewState): string {
   } else if (!map.rows.length) {
     rows = `<div class="empty-state"><div class="empty-icon">${icon('search', 34)}</div><h2>No decisions match</h2><p>Try another filter or clear the search.</p><button type="button" class="secondary" data-action="reset-map" data-focus="reset-map">Show all current decisions</button></div>`;
   } else {
-    rows = `<div class="trace-columns" aria-hidden="true"><span class="col-supports">SUPPORTS</span><span></span><span>DECISION</span><span></span><span class="col-challenges">CHALLENGES</span></div>
+    rows = `<div class="trace-columns" aria-hidden="true"><span class="col-supports">Supports</span><span></span><span>Decision</span><span></span><span class="col-challenges">Challenges</span></div>
       <ol class="trace-rows">${map.rows.map((row) => rowHtml(row, map, state)).join('')}</ol>`;
   }
   return `${rows}${looseHtml(map, state)}`;
@@ -150,8 +137,8 @@ function rowHtml(row: TraceRow, map: TraceMap, state: TraceMapViewState): string
 function looseHtml(map: TraceMap, state: TraceMapViewState): string {
   if (!map.unlinked.length) return '';
   return `<section class="trace-loose" aria-labelledby="loose-title">
-    <p class="eyebrow" id="loose-title">NOT CONNECTED YET · ${map.unlinked.length}</p>
-    <p class="hint">Evidence that is not connected to any decision yet. Open one to connect it.</p>
+    <h2 class="section-title" id="loose-title">Not connected yet <span>${map.unlinked.length}</span></h2>
+    <p class="hint">Open one to connect it to a decision.</p>
     <div class="loose-grid">${map.unlinked.map((entry) => chip(entry, map, state, 'loose')).join('')}</div>
   </section>`;
 }

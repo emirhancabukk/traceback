@@ -46,14 +46,14 @@ describe('first run', () => {
   it('offers the example workspace instead of seeding fake entries', () => {
     mount();
     expect(store.workspace.entries).toEqual([]);
-    expect(heading()).toBe('Your trail is empty');
+    expect(heading()).toBe('Nothing here yet');
     $('[data-action="load-example"]').click();
     expect(location.hash).toBe('#map');
-    expect(root.textContent).toContain('You are looking at the example workspace');
+    expect(root.textContent).toContain('Example data.');
     expect($$('.trace-row')).toHaveLength(store.workspace.entries.filter(isLiveDecision).length);
     $('[data-action="remove-examples"]').click();
     expect(store.workspace.entries).toEqual([]);
-    expect(heading()).toBe('Your trail is empty');
+    expect(heading()).toBe('Nothing here yet');
   });
 
   it('opens the view named in the address and normalises unknown addresses', () => {
@@ -131,7 +131,7 @@ describe('trace map', () => {
     store.createEntry({ type: 'decision', title: 'Decide' });
     const loose = store.createEntry({ type: 'note', title: 'Loose end' });
     remount();
-    expect($('.trace-loose').textContent).toContain('NOT CONNECTED YET · 1');
+    expect($('.trace-loose .section-title').textContent).toBe('Not connected yet 1');
     expect($(`.trace-loose .chip-ev[data-id="${loose.id}"]`)).toBeTruthy();
     expect($('.trace-placeholder').textContent).toBe('no supporting evidence yet');
   });
@@ -272,7 +272,7 @@ describe('dialogs', () => {
     remount();
     $(`.trace-loose .chip-ev[data-id="${note.id}"]`).click();
     $('.drawer [data-action="link"]').click();
-    expect($('#link-form').textContent).toContain('Connect this to decisions');
+    expect($('#link-form').textContent).toContain('Connect to decisions');
     $<HTMLInputElement>(`#link-form [name="pick"][value="${decision.id}"]`).checked = true;
     $<HTMLInputElement>('#link-form [value="challenges"]').checked = true;
     $<HTMLFormElement>('#link-form').requestSubmit();
@@ -349,7 +349,7 @@ describe('guidance', () => {
     $('[data-action="help"]').click();
     const help = $<HTMLDialogElement>('#help-dialog');
     expect(help.hasAttribute('open')).toBe(true);
-    expect(help.textContent).toContain('Keep the why next to the what');
+    expect(help.textContent).toContain('How Traceback works');
     help.querySelector<HTMLButtonElement>('.dialog-actions [data-close]')!.click();
     expect(help.hasAttribute('open')).toBe(false);
     press('?');
