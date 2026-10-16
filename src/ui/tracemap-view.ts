@@ -27,11 +27,9 @@ export function traceMapHtml(index: WorkspaceIndex, state: TraceMapViewState): s
 
 function header(map: TraceMap): string {
   const { summary } = map;
-  const largest = Math.max(1, ...EVIDENCE_TYPES.map((type) => summary.evidenceByType[type]));
-  const bars = EVIDENCE_TYPES.map((type) => {
+  const types = EVIDENCE_TYPES.map((type) => {
     const count = summary.evidenceByType[type];
-    const height = count ? Math.max(14, Math.round((count / largest) * 100)) : 6;
-    return `<i class="type-${type}" style="height:${height}%" title="${count} ${typeLabel(type, count !== 1).toLowerCase()}"></i>`;
+    return `<span class="type-count type-${type}" title="${count} ${typeLabel(type, count !== 1).toLowerCase()}"><i>${typeIcon(type, 12)}</i><b>${count}</b></span>`;
   }).join('');
   const described = EVIDENCE_TYPES.map((type) => {
     const count = summary.evidenceByType[type];
@@ -41,9 +39,9 @@ function header(map: TraceMap): string {
     <div><p class="eyebrow">WORKSPACE / PERSONAL</p><h1 id="view-title">Trace map</h1><p class="sub">Every current decision, with the evidence for it on the left and against it on the right.</p></div>
     <div class="summary">
       <div class="stat" title="Decisions that are proposed or accepted, not replaced or rejected"><b>${summary.liveDecisions}</b><small>current decisions</small></div>
-      <div class="stat" title="Connections from evidence that supports a current decision"><b class="is-accent">${summary.supportingLinks}</b><small>reasons for</small></div>
-      <div class="stat" title="Connections from evidence that argues against a current decision"><b class="is-rose">${summary.openChallenges}</b><small>reasons against</small></div>
-      <div class="stat" role="img" aria-label="Evidence by type: ${described}" title="Evidence by type: ${described}"><div class="type-bars">${bars}</div><small>evidence by type</small></div>
+      <div class="stat is-for" title="Connections from evidence that supports a current decision"><b>${summary.supportingLinks}</b><small>reasons for</small></div>
+      <div class="stat is-against" title="Connections from evidence that argues against a current decision"><b>${summary.openChallenges}</b><small>reasons against</small></div>
+      <div class="stat stat-types" role="img" aria-label="Evidence by type: ${described}"><div class="type-counts">${types}</div><small>evidence by type</small></div>
     </div>
   </header>`;
 }
@@ -140,7 +138,7 @@ function rowHtml(row: TraceRow, map: TraceMap, state: TraceMapViewState): string
     ${flow(supports.length, height, 'supports')}
     <article class="${cardClasses.join(' ')}" data-action="select" data-id="${decision.id}" style="min-height:${height}px">
       <h3><button type="button" class="card-open" data-action="select" data-id="${decision.id}" data-focus="card:${decision.id}">${title}</button></h3>
-      <div class="trace-meta"><span class="pill status-${status}">${STATUS_LABELS[status]}</span><time datetime="${decision.createdAt}">${formatShort(decision.createdAt)}</time><span class="trace-tally">${supports.length} for · ${challenges.length} against</span></div>
+      <div class="trace-meta"><span class="pill status-${status}">${STATUS_LABELS[status]}</span><time datetime="${decision.createdAt}">${formatShort(decision.createdAt)}</time><span class="trace-tally"><b class="${supports.length ? 'for' : ''}">${supports.length}</b> for · <b class="${challenges.length ? 'against' : ''}">${challenges.length}</b> against</span></div>
       <div class="balance" aria-hidden="true" title="${supports.length} for, ${challenges.length} against">${balance}</div>
       ${replacedLines}${replacedByLine}
     </article>

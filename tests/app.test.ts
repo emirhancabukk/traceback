@@ -399,3 +399,35 @@ describe('cross-tab and focus', () => {
     expect(root.textContent).toContain('No matching entries');
   });
 });
+
+describe('theme', () => {
+  const theme = () => document.documentElement.dataset.theme;
+
+  it('follows the system until a theme is picked, then remembers it', () => {
+    mount();
+    expect(theme()).toBeUndefined();
+    expect($('[data-theme-value="system"]').getAttribute('aria-pressed')).toBe('true');
+    $('[data-action="theme"][data-theme-value="light"]').click();
+    expect(theme()).toBe('light');
+    expect(localStorage.getItem('traceback.theme')).toBe('light');
+    expect($('[data-theme-value="light"]').getAttribute('aria-pressed')).toBe('true');
+    remount();
+    expect(theme()).toBe('light');
+    $('[data-action="theme"][data-theme-value="system"]').click();
+    expect(theme()).toBeUndefined();
+    expect(localStorage.getItem('traceback.theme')).toBeNull();
+  });
+
+  it('follows a theme picked in another tab and ignores unknown values', () => {
+    mount();
+    localStorage.setItem('traceback.theme', 'dark');
+    window.dispatchEvent(new StorageEvent('storage', { key: 'traceback.theme' }));
+    expect(theme()).toBe('dark');
+    localStorage.setItem('traceback.theme', 'neon');
+    window.dispatchEvent(new StorageEvent('storage', { key: 'traceback.theme' }));
+    expect(theme()).toBeUndefined();
+    unmount?.();
+    unmount = undefined;
+    expect(theme()).toBeUndefined();
+  });
+});

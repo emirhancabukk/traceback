@@ -63,7 +63,7 @@ const drafts: Draft[] = [
     status: 'accepted',
     time: '16:46',
     title: 'Bundle the fonts instead of loading Google Fonts',
-    body: "Manrope and DM Mono ship with the app as woff2 files, and the page's Content-Security-Policy only allows fonts from the app itself.",
+    body: "The fonts ship with the app as woff2 files, and the page's Content-Security-Policy only allows fonts from the app itself.",
     tags: ['privacy'],
   },
   {
@@ -184,7 +184,7 @@ const drafts: Draft[] = [
     time: '16:45',
     title: 'SIL Open Font License 1.1',
     url: 'https://openfontlicense.org/',
-    body: 'Manrope and DM Mono are OFL-1.1 fonts, so they can be bundled and redistributed together with their licence text.',
+    body: 'The bundled fonts are OFL-1.1, so they can be redistributed together with their licence text.',
     tags: ['licensing'],
   },
   {
@@ -192,7 +192,7 @@ const drafts: Draft[] = [
     type: 'file-change',
     time: '16:47',
     title: 'src/styles.css: removed the fonts.googleapis.com import',
-    body: 'The latin and latin-ext subsets now live in src/assets/fonts next to OFL-Manrope.txt and OFL-DM-Mono.txt.',
+    body: 'The latin and latin-ext subsets now live in src/assets/fonts next to their OFL licence texts.',
     tags: ['privacy'],
   },
   {

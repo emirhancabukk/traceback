@@ -16,12 +16,15 @@ Everything stays in your browser. There is no account, no server and no telemetr
 
 ![The graph view with a decision selected](docs/screenshots/graph.png)
 
+![The trace map in light mode](docs/screenshots/trace-map-light.png)
+
 ## Features
 
 - **Five entry types**: source, note, decision, command, file change, with tags, links and verbatim quotes.
 - **Decisions with a lifecycle**: proposed, accepted, rejected, replaced — including which decision replaced which.
 - **Evidence for and against**: every link says whether the evidence supports or challenges the decision, and you can flip it later.
 - **Edit in place**: change, reconnect or delete any entry from its details panel; a deleted entry comes back with **Undo**.
+- **Dark and light**: follows your system's setting; pick Dark or Light in the sidebar to override it.
 - **Search with operators**: `type:decision`, `#tag`, `status:proposed`, `is:unsupported`, `is:unlinked`, `is:challenged`, `"exact phrase"`. In the trace map a search also finds decisions through their evidence.
 - **Coverage at a glance**: current decisions, reasons for and against, and evidence by type. Replaced decisions are never deleted; they stay in the trail, linked to the decision that replaced them.
 - **Exports**: one decision as a Markdown or JSON bundle (UTC timestamps, quotes, links); the whole workspace as a JSON backup you can import again.
@@ -121,4 +124,4 @@ Traceback has no runtime dependencies. The core is plain TypeScript with no DOM 
 
 ## Licence
 
-[MIT](LICENSE). The bundled Manrope and DM Mono fonts are under the [SIL Open Font License 1.1](src/assets/fonts).
+[MIT](LICENSE). The bundled Geist and Geist Mono fonts are under the [SIL Open Font License 1.1](src/assets/fonts).

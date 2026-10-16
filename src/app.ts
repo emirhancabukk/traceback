@@ -7,6 +7,7 @@ import { createDialogs } from './ui/dialogs';
 import { escapeHtml, plural } from './ui/format';
 import { attachGraph, renderGraph, type GraphController, type GraphTransform } from './ui/graph-view';
 import { icon, type IconName } from './ui/icons';
+import { THEME_KEY, applyTheme, isTheme, readTheme, saveTheme, type Theme } from './ui/theme';
 import { inspectorHtml } from './ui/inspector';
 import { timelineHtml } from './ui/timeline-view';
 import { traceMapHtml } from './ui/tracemap-view';
@@ -67,6 +68,7 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
     drawerEntering: false,
     /** Where focus goes back to when the trace map drawer closes. */
     drawerOpener: undefined as string | undefined,
+    theme: readTheme() as Theme,
   };
   const notices: Notice[] = [];
   const timers = new Set<ReturnType<typeof setTimeout>>();
@@ -304,10 +306,25 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
       <button type="button" class="primary side-capture" data-action="new-entry" data-focus="capture" title="Capture a source, note, command, file change or decision (keyboard shortcut: N)">${icon('plus', 15)}<span>Capture entry</span><kbd aria-hidden="true">N</kbd></button>
       <nav class="side-nav" aria-label="Views">${nav}</nav>
       <div class="side-foot">
+        <div class="theme-switch" role="group" aria-label="Colour theme">${themeSwitchHtml()}</div>
         <div class="backup-actions"><button type="button" class="link-button" data-action="export-backup" data-focus="export-backup"${empty ? ' disabled' : ''}>Export backup</button><label class="link-button">Import backup<input type="file" data-change="import" accept="application/json,.json" hidden /></label></div>
         <div class="storage-status"><span class="status-dot${persistent ? '' : ' is-off'}"></span>${persistent ? 'Stored locally' : 'Not saved: storage blocked'} <small>· private by default</small></div>
       </div>
     </aside>`;
+  }
+
+  function themeSwitchHtml(): string {
+    const options: Array<{ value: Theme; label: string; glyph: IconName }> = [
+      { value: 'system', label: 'Match system', glyph: 'monitor' },
+      { value: 'dark', label: 'Dark', glyph: 'moon' },
+      { value: 'light', label: 'Light', glyph: 'sun' },
+    ];
+    return options
+      .map(({ value, label, glyph }) => {
+        const on = state.theme === value;
+        return `<button type="button" class="theme-option${on ? ' on' : ''}" data-action="theme" data-theme-value="${value}" data-focus="theme:${value}" aria-pressed="${on}" aria-label="${label}" title="${label}">${icon(glyph, 14)}</button>`;
+      })
+      .join('');
   }
 
   function onboardingHtml(): string {
@@ -453,6 +470,16 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
       case 'zoom-fit':
         graph?.fit();
         break;
+      case 'theme': {
+        const value = element.getAttribute('data-theme-value');
+        if (isTheme(value) && value !== state.theme) {
+          state.theme = value;
+          saveTheme(value);
+          applyTheme(doc.documentElement, value);
+          render();
+        }
+        break;
+      }
     }
   }
 
@@ -637,6 +664,15 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
   doc.addEventListener('keydown', onKeyDown);
   target.addEventListener('popstate', onRoute);
   target.addEventListener('hashchange', onRoute);
+  const onThemeStorage = (event: StorageEvent) => {
+    if (event.key !== THEME_KEY && event.key !== null) return;
+    const next = readTheme();
+    if (next === state.theme) return;
+    state.theme = next;
+    applyTheme(doc.documentElement, next);
+    render();
+  };
+  target.addEventListener('storage', onThemeStorage);
 
   const unsubscribe = store.subscribe((reason) => {
     if (reason === 'external') render();
@@ -644,6 +680,7 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
   const stopSync = store.connect(target);
   const stopBridge = connectExtensionBridge({ target, onCaptures: receiveCaptures });
 
+  applyTheme(doc.documentElement, state.theme);
   if (target.location.hash !== VIEWS[state.view].hash) target.history.replaceState(null, '', VIEWS[state.view].hash);
   render();
   renderNotices();
@@ -659,6 +696,8 @@ export function mountApp(root: HTMLElement, options: MountOptions = {}): () => v
     doc.removeEventListener('keydown', onKeyDown);
     target.removeEventListener('popstate', onRoute);
     target.removeEventListener('hashchange', onRoute);
+    target.removeEventListener('storage', onThemeStorage);
+    applyTheme(doc.documentElement, 'system');
     unsubscribe();
     stopSync();
     stopBridge();

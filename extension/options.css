@@ -1,18 +1,40 @@
-:root { color-scheme: dark; font-family: system-ui, sans-serif; color: #e6edf3; background: #0b1117; }
+:root {
+  color-scheme: light dark;
+  --page: light-dark(#fafafa, #09090b);
+  --card: light-dark(#ffffff, #111113);
+  --input: light-dark(#ffffff, #09090b);
+  --border: light-dark(#e4e4e7, rgba(255, 255, 255, 0.09));
+  --border-strong: light-dark(#d4d4d8, rgba(255, 255, 255, 0.16));
+  --text: light-dark(#09090b, #fafafa);
+  --text-2: light-dark(#52525b, #a1a1aa);
+  --text-3: #71717a;
+  --accent: light-dark(#09090b, #fafafa);
+  --accent-hover: light-dark(#27272a, #e4e4e7);
+  --accent-ink: light-dark(#fafafa, #09090b);
+  --focus-glow: light-dark(rgba(9, 9, 11, 0.08), rgba(250, 250, 250, 0.12));
+  --shade: light-dark(rgba(9, 9, 11, 0.05), transparent);
+  --ok: light-dark(#16a34a, #4ade80);
+  --danger: light-dark(#dc2626, #f87171);
+  --danger-bg: light-dark(#fef2f2, rgba(248, 113, 113, 0.08));
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--text);
+  background: var(--page);
+  -webkit-font-smoothing: antialiased;
+}
 body { margin: 0; }
-main { width: min(540px, calc(100% - 48px)); margin: 8vh auto; padding: 30px; border: 1px solid #263845; border-radius: 14px; background: #121c25; }
-.brand { display: flex; gap: 9px; align-items: center; font-size: 20px; }
-.brand span { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; color: #071016; background: #6ee7c6; }
-.brand + p { color: #8ca0ad; line-height: 1.5; margin: 18px 0 24px; }
-label, h2 { display: block; margin: 0 0 8px; color: #c4d1d9; font-size: 13px; font-weight: 600; }
-section { margin-top: 26px; padding-top: 20px; border-top: 1px solid #22323d; }
+main { width: min(540px, calc(100% - 48px)); margin: 8vh auto; padding: 28px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); box-shadow: 0 1px 2px var(--shade), 0 8px 24px var(--shade); }
+.brand { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 650; letter-spacing: -0.02em; }
+.brand span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; background: var(--accent); color: var(--accent-ink); }
+.brand + p { margin: 16px 0 24px; color: var(--text-2); font-size: 14px; line-height: 1.55; }
+label, h2 { display: block; margin: 0 0 8px; color: var(--text); font-size: 13px; font-weight: 600; }
+section { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
 .row { display: flex; gap: 8px; }
-input { flex: 1; padding: 10px 11px; border: 1px solid #314551; border-radius: 7px; color: #fff; background: #0b131a; font: inherit; }
-input:focus { outline: none; border-color: #6ee7c6; }
-button { padding: 10px 16px; border: 0; border-radius: 7px; background: #6ee7c6; color: #071016; font: 700 13px system-ui, sans-serif; cursor: pointer; }
-button:hover { background: #96f2dc; }
-button:focus-visible { outline: 2px solid #e6edf3; outline-offset: 2px; }
-button.danger { background: transparent; color: #f1a6a6; border: 1px solid #5a3236; }
-button.danger:hover { background: #2e1b1d; }
-.hint { margin: 8px 0 12px; color: #7d909c; font-size: 12px; line-height: 1.5; }
-output { display: block; min-height: 18px; margin-top: 18px; color: #6ee7c6; font-size: 13px; }
+input { flex: 1; height: 38px; padding: 0 11px; border: 1px solid var(--border); border-radius: 8px; background: var(--input); color: var(--text); font: inherit; font-size: 13.5px; }
+input:focus { outline: none; border-color: var(--border-strong); box-shadow: 0 0 0 3px var(--focus-glow); }
+button { height: 38px; padding: 0 16px; border: 0; border-radius: 8px; background: var(--accent); color: var(--accent-ink); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+button:hover { background: var(--accent-hover); }
+button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+button.danger { border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent); background: transparent; color: var(--danger); }
+button.danger:hover { background: var(--danger-bg); }
+.hint { margin: 8px 0 12px; color: var(--text-3); font-size: 12.5px; font-weight: 400; line-height: 1.5; }
+output { display: block; min-height: 18px; margin-top: 18px; color: var(--ok); font-size: 13px; }
